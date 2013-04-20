@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2009 Ubixum, Inc. 
+# Copyright (C) 2013 BrooksEE, LLC
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,112 @@
 import nitro
 from nitro import DeviceInterface, Terminal, Register, SubReg
 
-di = nitro.load_di ( "Cypress/fx3/fx3.xml" )
-di.name='UXN1330'
+di=DeviceInterface(
+    name='UXN1330', 
+
+    terminal_list=[
+        ########################################################################
+        Terminal(
+            name='DUMMY_FPGA',
+            comment='Dummy FPGA Terminal',
+            regAddrWidth=16, 
+            regDataWidth=32,
+            addr = 511,
+            ),
+        Terminal(
+            name='FPGA',
+            comment='FPGA registers',
+            addr=0x1,
+            regAddrWidth=16, 
+            regDataWidth=16,
+            register_list=[
+                Register(name='version',
+                         type='int',
+                         mode='read',
+                         subregs=[SubReg(name="minor", width=8),
+                                  SubReg(name="major", width=8),],
+                         comment='FPGA release version',
+                         ),
+                Register(name='sw_reset',
+                         type='int',
+                         mode='write',
+                         width=1,
+                         comment='Software reset of the FPGA.',
+                         init=0,
+                         ),
+                Register(name="led_sel",
+                         type="int",
+                         mode="write",
+                         width=4, 
+                         init=0, 
+                         ),
+                ]),
+
+        ########################################################################
+        Terminal(
+            name='PROGRAM_FPGA',
+            addr=0x104,
+            regAddrWidth=16,
+            regDataWidth=16,
+            comment='Termanial for writing FPGA bit file for programming the FPGA',
+            ),
+
+        ########################################################################
+        Terminal(
+            name='DRAM',
+            comment='DRAM Read/Write Port',
+            regAddrWidth=32, 
+            regDataWidth=16,
+            addr=509,
+            ),
+
+        Terminal(
+            name='DRAM_CTRL',
+            comment='DRAM control and status registers',
+            regAddrWidth=16, 
+            regDataWidth=16,
+            addr=508,
+            register_list=[
+                Register(name='status',
+                         type='int',
+                         mode='read',
+                         subregs=[SubReg(name="mcb", width=32, comment="Status Regsiter from MCB block"),
+                                  SubReg(name="write_error", width=4, comment="Status indicator from dram fifo"),
+                                  SubReg(name="write_underrun", width=4, comment="Status indicator from dram fifo"),
+                                  SubReg(name="read_error", width=4, comment="Status indicator from dram fifo"),
+                                  SubReg(name="read_overflow", width=4, comment="Status indicator from dram fifo"),
+                                  SubReg(name='pll_locked',   width=1, comment='Indicates whether PLL generating SDRAM clock is locked.'),
+                                  SubReg(name='calib_done',   width=1, comment='Indicates whether calibration is done so that MCB can be used.'),
+                                  SubReg(name='selfrefresh_mode',   width=1, comment='Indicates whether PLL generating SDRAM clock is locked.'),
+                                  SubReg(name="rst", width=1, comment="rst returned from the infrastructure block"),
+                                  ],
+                         comment='Status Register',
+                         ),
+                Register(name='mcb_reset',
+                         type='trigger',
+                         mode='write',
+                         width=1,
+                         comment="Resets the dram memory controller block (MCB).",
+                         ),
+                Register(name='mode',
+                         type='int',
+                         mode='write',
+                         subregs=[SubReg(name='selfrefresh',init=0,width=1,comment='Puts dram controller in self refresh mode. See Xilinx UG388 MCB User Guide for more information'),
+                                  ],
+                         comment='Mode Register',
+                         ),
+                ]),
+
+        ],
+    )
+
+di = nitro.load_di ( "Cypress/fx3/fx3.xml", di )
+di = nitro.load_di("Xilinx/Spartan/Spartan.xml", di)
 
 # add M25P terminals in
 di = nitro.load_di ( "Numonyx/M25P/M25P.xml", di )
 di['DATA'].name = 'FPGA_PROM_DATA'
 di['CTRL'].name = 'FPGA_PROM_CTRL'
+
+
 

@@ -1,0 +1,9 @@
+*.vcd
+*~
+*.so
+sim/obj_dir
+rtl_auto
+xilinx
+!xilinx/UXN1330.ucf
+UXN1330.xml
+
