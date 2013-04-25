@@ -15,6 +15,7 @@ SOURCE += $(FX3DIR)rdwr.c
 SOURCE += handlers.c
 SOURCE += ../../../Microchip/M24XX/fx3/m24xx.c
 SOURCE += ../../../Numonyx/M25P/fx3/m25p.c
+SOURCE += ../../../Xilinx/Spartan/fx3/spartan.c
 SOURCE += $(FX3DIR)main.c 
 
 # add any custom debugging or cflags

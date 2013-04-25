@@ -62,15 +62,6 @@ di=DeviceInterface(
 
         ########################################################################
         Terminal(
-            name='PROGRAM_FPGA',
-            addr=0x104,
-            regAddrWidth=16,
-            regDataWidth=16,
-            comment='Termanial for writing FPGA bit file for programming the FPGA',
-            ),
-
-        ########################################################################
-        Terminal(
             name='DRAM',
             comment='DRAM Read/Write Port',
             regAddrWidth=32, 
@@ -120,6 +111,8 @@ di=DeviceInterface(
 
 di = nitro.load_di ( "Cypress/fx3/fx3.xml", di )
 di = nitro.load_di("Xilinx/Spartan/Spartan.xml", di)
+# parallel programming not supported on fx3
+del di['PROGRAM_FPGA']
 
 # add M25P terminals in
 di = nitro.load_di ( "Numonyx/M25P/M25P.xml", di )
