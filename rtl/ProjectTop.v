@@ -251,7 +251,7 @@ module ProjectTop
          di_write_rdy = 1;
          di_transfer_status = 0;
       end else begin
-         di_reg_datao = 16'hAAAA;
+         di_reg_datao = 32'hAAAAAAAA;
          di_read_rdy  = 1;
          di_write_rdy = 1;
          di_transfer_status = 16'hFFFF; // undefined terminal, return error code
@@ -275,7 +275,11 @@ module ProjectTop
                   0;
 
    // invert final led output
-   assign led_b = ~led_mux;
+   reg 	tmp;
+   always @(posedge ifclk) begin
+      tmp <= !tmp;
+   end
+   assign led_b = tmp; //~led_mux;
 
 
    // change these assignments as necessary

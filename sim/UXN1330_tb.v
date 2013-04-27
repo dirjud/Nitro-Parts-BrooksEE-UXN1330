@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 BrooksEE, LLC.
+ * Copyright (C) 2013 BrooksEE, LLC.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -103,7 +103,8 @@ module UXN1330_tb
 
       .button                           (button),
       .led_b                            (led_b),
-
+      .header                           (header),
+      
       .sdram_addr                       (sdram_addr),
       .sdram_ba                         (sdram_ba),
       .sdram_cas_n                      (sdram_cas_n),

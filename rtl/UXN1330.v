@@ -681,7 +681,8 @@ module UXN1330
 	);
    
 
-   wire [15:0] dram_reg_datao, dram_transfer_status;
+   wire [15:0] dram_transfer_status;
+   wire [31:0] dram_reg_datao;
    wire        dram_read_rdy, dram_write_rdy;
    
    always @(*) begin
@@ -696,7 +697,7 @@ module UXN1330
          di_write_rdy = 1;
          di_transfer_status = 0;
       end else if(di_term_addr == `TERM_DUMMY_FPGA) begin
-	 di_reg_datao = 16'h9988;
+	 di_reg_datao = 32'hBBAA9988;
 	 di_read_rdy  = 1;
 	 di_write_rdy = 1;
 	 di_transfer_status = 0;
@@ -714,7 +715,7 @@ module UXN1330
    wire dram_read       = term_dram && di_read;
    wire dram_read_mode  = term_dram && di_read_mode;
 
-   di2mig di2mig
+   di2mig #(.DATA_WIDTH(32)) di2mig
      (
       .ifclk                            (ifclk),
       .resetb                           (resetb),
@@ -722,9 +723,9 @@ module UXN1330
       .di_read                          (dram_read),
       .di_write_mode                    (dram_write_mode),
       .di_write                         (dram_write),
-      .di_reg_addr                      (di_reg_addr[31:0] ),
+      .di_reg_addr                      (di_reg_addr),
       .di_read_rdy                      (dram_read_rdy),
-      .di_reg_datao                     (dram_reg_datao[15:0]),
+      .di_reg_datao                     (dram_reg_datao),
       .di_transfer_status               (dram_transfer_status),
       .di_write_rdy                     (dram_write_rdy),
       .di_reg_datai                     (di_reg_datai),

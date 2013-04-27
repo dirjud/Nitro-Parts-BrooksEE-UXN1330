@@ -27,7 +27,7 @@ di=DeviceInterface(
         Terminal(
             name='DUMMY_FPGA',
             comment='Dummy FPGA Terminal',
-            regAddrWidth=16, 
+            regAddrWidth=32, 
             regDataWidth=32,
             addr = 511,
             ),
@@ -35,8 +35,8 @@ di=DeviceInterface(
             name='FPGA',
             comment='FPGA registers',
             addr=0x1,
-            regAddrWidth=16, 
-            regDataWidth=16,
+            regAddrWidth=32, 
+            regDataWidth=32,
             register_list=[
                 Register(name='version',
                          type='int',
@@ -65,15 +65,15 @@ di=DeviceInterface(
             name='DRAM',
             comment='DRAM Read/Write Port',
             regAddrWidth=32, 
-            regDataWidth=16,
+            regDataWidth=32,
             addr=509,
             ),
 
         Terminal(
             name='DRAM_CTRL',
             comment='DRAM control and status registers',
-            regAddrWidth=16, 
-            regDataWidth=16,
+            regAddrWidth=32, 
+            regDataWidth=32,
             addr=508,
             register_list=[
                 Register(name='status',
