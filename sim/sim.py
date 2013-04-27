@@ -18,14 +18,28 @@ dev.set_di(d["di"])
 
 
 #t = ubitest.DramPatTest(config)
+try:
+    buf1 = "\xAA\x55" * 8
+    dev.write("DRAM", 0, buf1)
+    
+    buf2 = "\x00" * len(buf1)
+    dev.read("DRAM", 0, buf2)
+    
+    if buf1 == buf2:
+        print "**** DRAM TEST PASSED ****"
+    else:
+        raise Exception("**** DRAM TEST FAILED ****")
+    
+    M = 4*10
+    dev.write("DUMMY_FPGA", 0, numpy.random.randint(0,255,M).astype(numpy.uint8))
+    
+    x = numpy.zeros(40, dtype=numpy.uint32)
+    dev.read("DUMMY_FPGA", 0, x)
+    if (x == 0xBBAA9988).all():
+        print "**** FPGA DUMMY TERM READ PASSED ****"
+    else:
+        raise Exception("**** FPGA DUMMY TERM READ PASSED ****")
+finally:
 
-buf1 = "\xAA\x55" * 8
-dev.write("DRAM", 0, buf1)
-
-buf2 = "\x00" * len(buf1)
-dev.read("DRAM", 0, buf2)
-
-
-
-tb.adv(100)
-tb.end()
+    tb.adv(100)
+    tb.end()
