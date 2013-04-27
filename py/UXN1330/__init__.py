@@ -1,7 +1,7 @@
 import nitro
 import logging, time
 log = logging.getLogger(__name__)
-from nitro_parts.Cypress import fx3 as fx3
+from nitro_parts.Cypress import fx3 
 from nitro_parts.Cypress.fx3 import program_fx3, program_fx3_prom
 
 default_di_file = "BrooksEE/UXN1330/UXN1330.xml"
