@@ -4,7 +4,7 @@
 # for the lXX and nXX buses in a separate file.
 
 NET "fx3_ifclk" TNM_NET = fx3_ifclk;
-TIMESPEC TS_fx3_ifclk = PERIOD "fx3_ifclk" 20.833 ns HIGH 50%;
+TIMESPEC TS_fx3_ifclk = PERIOD "fx3_ifclk" 10 ns HIGH 50%;
 
 #NET : status_rst : TIG;
 #NET : mig_38/memc3_infrastructure_inst/rst0_sync_r[24] : TIG;

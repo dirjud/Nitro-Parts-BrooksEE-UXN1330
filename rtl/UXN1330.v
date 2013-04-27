@@ -529,11 +529,6 @@ module UXN1330
    wire         c3_clk0;
    wire         c3_rst0;
    wire         c3_async_rst;
-   wire         c3_sysclk_2x;
-   wire         c3_sysclk_2x_180;
-   wire         c3_pll_ce_0;
-   wire         c3_pll_ce_90;
-   wire         c3_mcb_drp_clk;
 
    always @(posedge ifclk) begin
       status_calib_done <= status_calib_done_wire;

@@ -222,9 +222,9 @@ module ProjectTop
    );
 
    wire di_clk = ifclk;
-   wire [7:0]           version_minor = 8'h02;
-   wire [7:0]           version_major = 8'h00;
-   wire [15:0]          version = {version_major, version_minor };
+   wire [15:0]          version_minor = 16'h02;
+   wire [15:0]          version_major = 16'h01;
+   wire [31:0]          version = {version_major, version_minor };
    
 `include "FPGATerminalInstance.v"
 
