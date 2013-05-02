@@ -21,7 +21,9 @@ module ProjectTop
    output reg di_write_rdy,
    output reg [15:0] di_transfer_status,
 
-   
+   output [15:0] i2c_addr,   
+   input [7:0] i2c_data,
+
    input button,
    output led_b,
    inout [15:0] header, // change to input/output/inout as appropriate.
@@ -274,13 +276,35 @@ module ProjectTop
                   (led_sel == 1) ? 1'b1 :
                   0;
 
-   // invert final led output
-   reg 	tmp;
-   always @(posedge ifclk) begin
-      tmp <= !tmp;
-   end
-   assign led_b = tmp; //~led_mux;
+   assign led_b = led_count[22]; //~led_mux;
 
+   wire [6:0] i2c_chip_addr = 104;
+   wire       slave_sda_out, slave_sda_oeb, slave_scl_out, slave_scl_oeb;
+
+   i2c_slave 
+     #(.NUM_ADDR_BYTES(2),
+       .NUM_DATA_BYTES(1))
+   i2c_slave
+     (.clk		(ifclk),
+      .reset_n		(resetb),
+      .chip_addr	(i2c_chip_addr),
+      .reg_addr		(i2c_addr),
+      .datai		(i2c_data),
+      .open_drain_mode  (1'b1),
+      .we		(),
+      .datao		(),
+      .done             (),
+      .busy             (),
+      
+      .sda_in		(n30n),
+      .scl_in		(n30p),
+      .sda_out		(slave_sda_out),
+      .sda_oeb		(slave_sda_oeb),
+      .scl_out		(slave_scl_out),
+      .scl_oeb		(slave_scl_oeb)
+      );
+//   assign sda = slave_sda_oeb  ? 1'bz : slave_sda_out ;
+//   assign scl = slave_scl_oeb  ? 1'bz : slave_scl_out ;
 
    // change these assignments as necessary
    assign  l10n = 0;
@@ -348,8 +372,8 @@ module ProjectTop
    assign  n1p  = 0;
    assign  n29n = 0;
    assign  n29p = 0;
-   assign  n30n = 0;
-   assign  n30p = 0;
+   assign  n30n = slave_sda_oeb  ? 1'bz : slave_sda_out ;
+   assign  n30p = slave_scl_oeb  ? 1'bz : slave_scl_out ;
    assign  n31n = 0;
    assign  n31p = 0;
    assign  n32n = 0;

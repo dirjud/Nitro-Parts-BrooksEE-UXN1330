@@ -19,7 +19,9 @@ SOURCE += ../../../Xilinx/Spartan/fx3/spartan.c
 SOURCE += $(FX3DIR)main.c 
 
 # add any custom debugging or cflags
-#CCFLAGS := -DENABLE_LOGGING
+CCFLAGS := -DENABLE_LOGGING
+CCFLAGS += -DDEBUG_SPARTAN
+CCFLAGS += -DDEBUG_CPU_HANDLER
 
 # any custom includes
 Include = -I../../../Numonyx/M25P/fx3

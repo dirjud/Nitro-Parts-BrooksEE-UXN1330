@@ -25,6 +25,19 @@ di=DeviceInterface(
     terminal_list=[
         ########################################################################
         Terminal(
+            name="SLAVE_I2C",
+            regAddrWidth=8,
+            regDataWidth=32,
+            addr = 43,
+            register_list = [
+                Register(name = "uid",
+                         type = "int",
+                         mode = "read",
+                         width = 32,
+                         ),
+                ]
+            ),
+        Terminal(
             name='DUMMY_FPGA',
             comment='Dummy FPGA Terminal',
             regAddrWidth=32, 

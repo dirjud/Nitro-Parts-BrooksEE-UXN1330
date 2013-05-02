@@ -15,6 +15,7 @@ INC_PATHS = $(UXN1330_INC_PATHS) \
 # auto generated themselves.
 INC_FILES = rtl_auto/FPGATerminalInst.v     \
 	    rtl_auto/DRAM_CTRLTerminalInst.v     \
+	    rtl_auto/terminals_defs.v     \
 	    sim/tb.cpp \
 	    sim/isim_tests.v \
 	    config.mk \
@@ -55,7 +56,7 @@ SYN_FILES = \
 	rtl_auto/FPGATerminal.v \
 	rtl_auto/DRAM_CTRLTerminal.v \
 	rtl/ProjectTop.v \
-
+	$(NITRO_PARTS_DIR)/lib/i2c/rtl/i2c_slave.v \
 
 # CUSTOM targets should go here
 
