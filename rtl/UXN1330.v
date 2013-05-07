@@ -45,6 +45,7 @@ module UXN1330
    output 	 led_b,
    inout [15:0]  header,
    
+`ifndef DISABLE_SDRAM
    output [14:0] sdram_addr,
    output [2:0]  sdram_ba,
    output 	 sdram_cas_n,
@@ -63,6 +64,7 @@ module UXN1330
    inout [15:0]  sdram_dq,
    inout 	 sdram_rzq,
    inout 	 sdram_zio,
+`endif
    
    inout 	 l10n,
    inout 	 l10p,
@@ -282,7 +284,7 @@ module UXN1330
       .di_reg_datai (di_reg_datai ),
       .di_transfer_status(di_transfer_status)
       );
-
+ 
    ProjectTop ProjectTop
      (
       .resetb                           (resetb),
@@ -498,27 +500,7 @@ module UXN1330
       );
 
 
-`ifdef DISABLE_SDRAM
-   assign sdram_addr   = 0;
-   assign sdram_ba     = 0;
-   assign sdram_cas_n  = 1;
-   assign sdram_ck     = 0;
-   assign sdram_ck_n   = 1;
-   assign sdram_cke    = 0;
-   assign sdram_ldm    = 0;
-   assign sdram_ldqs   = 0;
-   assign sdram_ldqs_n = 1;
-   assign sdram_odt    = 0;
-   assign sdram_ras_n  = 1;
-   assign sdram_udm    = 0;
-   assign sdram_udqs   = 0;
-   assign sdram_udqs_n = 1;
-   assign sdram_we_n   = 1;
-   assign sdram_dq     = 0;
-   assign sdram_rzq    = 0;
-   assign sdram_zio    = 0;
-
-`else
+`ifndef DISABLE_SDRAM
    wire status_pll_locked, status_calib_done_wire, status_selfrefresh_mode;
    wire [3:0] status_write_error    = { p3_wr_error,   p2_wr_error,   p1_wr_error,   p0_wr_error    };
    wire [3:0] status_write_underrun = { p3_wr_underrun,p2_wr_underrun,p1_wr_underrun,p0_wr_underrun };
@@ -701,7 +683,7 @@ module UXN1330
          di_write_rdy = 1;
          di_transfer_status = 0;
       end else if(di_term_addr == `TERM_DUMMY_FPGA) begin
-	 di_reg_datao = 32'hBBAA9988;
+	 di_reg_datao = (di_reg_addr[0]) ? 32'hBBAA9988 : ~32'hBBAA9988;
 	 di_read_rdy  = 1;
 	 di_write_rdy = 1;
 	 di_transfer_status = 0;
@@ -751,161 +733,8 @@ module UXN1330
    
    
 
+`endif
 
 endmodule
 
-
-
-
-// //////////////////////////////////////////////////////////////////////////////
-// module sdram_clks
-//   (
-//    input  ifclk,
-//    input  sys_rst_n,
-//    output clk0,
-//    output rst0,
-//    output async_rst,
-//    output sysclk_2x,
-//    output sysclk_2x_180,
-//    output mcb_drp_clk,
-//    output pll_ce_0,
-//    output pll_ce_90,
-//    output pll_locked
-//    );
-// `ifndef verilator
-//    // # of clock cycles to delay deassertion of reset. Needs to be a fairly
-//    // high number not so much for metastability protection, but to give time
-//    // for reset (i.e. stable clock cycles) to propagate through all state
-//    // machines and to all control signals (i.e. not all control signals have
-//    // resets, instead they rely on base state logic being reset, and the effect
-//    // of that reset propagating through the logic). Need this because we may not
-//    // be getting stable clock cycles while reset asserted (i.e. since reset
-//    // depends on PLL/DCM lock status)
-//    localparam RST_SYNC_NUM = 25;
-// 
-//    wire         clk_2x_0;
-//    wire         clk_2x_180;
-//    wire         clk0_bufg;
-//    wire         clk0_bufg_in;
-//    wire         mcb_drp_clk_bufg_in;
-//    wire         clkfbout_clkfbin;
-//    wire         locked;
-// 
-//    reg [RST_SYNC_NUM-1:0] rst0_sync_r    /* synthesis syn_maxfan = 10 */;
-//    wire                   sys_rst = ~sys_rst_n;
-// 
-//    assign clk0        = clk0_bufg;
-// 
-//    // generate 125MHz from 48MHz by first dividing by 4 and them mult by 5
-//    // generate 660MHz from 48MHz by first dividing by 4 and them mult by 55
-//    // generate 660MHz from 48MHz by first dividing by 4 and them mult by 55
-//    // generate 800MHz from 48MHz by first dividing by 3 and them mult by 50
-//    PLL_ADV #
-//      (
-//       .BANDWIDTH          ("OPTIMIZED"),
-//       .CLKIN1_PERIOD      (20.833),
-//       .CLKIN2_PERIOD      (1),
-//       .CLKOUT0_DIVIDE     (2),
-//       .CLKOUT1_DIVIDE     (2),
-//       .CLKOUT2_DIVIDE     (16),
-//       .CLKOUT3_DIVIDE     (8),
-//       .CLKOUT4_DIVIDE     (1),
-//       .CLKOUT5_DIVIDE     (1),
-//       .CLKOUT0_PHASE      (0.000),
-//       .CLKOUT1_PHASE      (180.000),
-//       .CLKOUT2_PHASE      (0.000),
-//       .CLKOUT3_PHASE      (0.000),
-//       .CLKOUT4_PHASE      (0.000),
-//       .CLKOUT5_PHASE      (0.000),
-//       .CLKOUT0_DUTY_CYCLE (0.500),
-//       .CLKOUT1_DUTY_CYCLE (0.500),
-//       .CLKOUT2_DUTY_CYCLE (0.500),
-//       .CLKOUT3_DUTY_CYCLE (0.500),
-//       .CLKOUT4_DUTY_CYCLE (0.500),
-//       .CLKOUT5_DUTY_CYCLE (0.500),
-//       .COMPENSATION       ("INTERNAL"),
-//       .DIVCLK_DIVIDE      (1),
-//       .CLKFBOUT_MULT      (11),
-//       .CLKFBOUT_PHASE     (0.0),
-//       .REF_JITTER         (0.005000)
-//       )
-//    u_pll_adv
-//      (
-//       .CLKFBIN     (clkfbout_clkfbin),
-//       .CLKINSEL    (1'b1),
-//       .CLKIN1      (ifclk),
-//       .CLKIN2      (1'b0),
-//       .DADDR       (5'b0),
-//       .DCLK        (1'b0),
-//       .DEN         (1'b0),
-//       .DI          (16'b0),
-//       .DWE         (1'b0),
-//       .REL         (1'b0),
-//       .RST         (sys_rst),
-//       .CLKFBDCM    (),
-//       .CLKFBOUT    (clkfbout_clkfbin),
-//       .CLKOUTDCM0  (),
-//       .CLKOUTDCM1  (),
-//       .CLKOUTDCM2  (),
-//       .CLKOUTDCM3  (),
-//       .CLKOUTDCM4  (),
-//       .CLKOUTDCM5  (),
-//       .CLKOUT0     (clk_2x_0),
-//       .CLKOUT1     (clk_2x_180),
-//       .CLKOUT2     (clk0_bufg_in),
-//       .CLKOUT3     (mcb_drp_clk_bufg_in),
-//       .CLKOUT4     (),
-//       .CLKOUT5     (),
-//       .DO          (),
-//       .DRDY        (),
-//       .LOCKED      (pll_locked)
-//       );
-// 
-//    BUFG U_BUFG_CLK0
-//      (
-//       .O (clk0_bufg),
-//       .I (clk0_bufg_in)
-//       );
-// 
-//    BUFG U_BUFG_CLK1
-//      (
-//       .O (mcb_drp_clk),
-//       .I (mcb_drp_clk_bufg_in)
-//       );
-// //***************************************************************************
-// // Reset synchronization
-// // NOTES:
-// //   1. shut down the whole operation if the PLL hasn't yet locked (and
-// //      by inference, this means that external SYS_RST_IN has been asserted -
-// //      PLL deasserts LOCKED as soon as SYS_RST_IN asserted)
-// //   2. asynchronously assert reset. This was we can assert reset even if
-// //      there is no clock (needed for things like 3-stating output buffers).
-// //      reset deassertion is synchronous.
-// //***************************************************************************
-//    
-//    wire rst_tmp = sys_rst | ~pll_locked;
-//    assign async_rst = sys_rst;
-// 
-//    // synthesis attribute max_fanout of rst0_sync_r is 10
-//    always @(posedge clk0_bufg or posedge rst_tmp)
-//      if (rst_tmp)
-//        rst0_sync_r <= {RST_SYNC_NUM{1'b1}};
-//      else
-//        // logical left shift by one (pads with 0)
-//        rst0_sync_r <= rst0_sync_r << 1;
-// 
-//    assign rst0    = rst0_sync_r[RST_SYNC_NUM-1];
-// 
-//    BUFPLL_MCB BUFPLL_MCB1
-//      ( .IOCLK0         (sysclk_2x),
-//        .IOCLK1         (sysclk_2x_180),
-//        .SERDESSTROBE0  (pll_ce_0),
-//        .SERDESSTROBE1  (pll_ce_90),
-//        .PLLIN0         (clk_2x_0),
-//        .PLLIN1         (clk_2x_180)
-//        );
-// `endif
-//endmodule
-
-`endif
 

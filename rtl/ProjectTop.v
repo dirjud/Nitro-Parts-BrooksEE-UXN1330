@@ -28,7 +28,6 @@ module ProjectTop
    output led_b,
    inout [15:0] header, // change to input/output/inout as appropriate.
    
-`ifndef DISABLE_SDRAM
    // The following pX_XXX ports provide access to the DDR2 memory
    // controller built into the spartan6 FPGA. See UG388 user guide
    // on how to use these ports.
@@ -100,7 +99,6 @@ module ProjectTop
    input [6:0]   p3_rd_count,
    input         p3_rd_overflow,
    input         p3_rd_error,
-`endif
 
    // These are generic I/O ports for bank X
    inout  l10n,

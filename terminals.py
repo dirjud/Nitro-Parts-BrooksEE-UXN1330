@@ -42,7 +42,7 @@ di=DeviceInterface(
             comment='Dummy FPGA Terminal',
             regAddrWidth=32, 
             regDataWidth=32,
-            addr = 511,
+            addr = 1023,
             ),
         Terminal(
             name='FPGA',
