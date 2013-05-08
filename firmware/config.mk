@@ -12,6 +12,7 @@ SOURCE += $(FX3DIR)cpu_handler.c
 SOURCE += $(FX3DIR)slfifo_handler.c
 SOURCE += $(FX3DIR)rdwr.c
 SOURCE += handlers.c
+SOURCE += uxn1330_term.c
 SOURCE += ../../../Microchip/M24XX/fx3/m24xx.c
 SOURCE += ../../../Numonyx/M25P/fx3/m25p.c
 SOURCE += ../../../Xilinx/Spartan/fx3/spartan.c
