@@ -28,6 +28,7 @@ di=DeviceInterface(
             name='UXN1330',
             regAddrWidth=8,
             regDataWidth=8, # NOTE need to fix nitro get width
+            addr=20,
             register_list=[
                 Register(name='version',
                          type='int',
