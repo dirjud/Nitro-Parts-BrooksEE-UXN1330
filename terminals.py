@@ -25,6 +25,36 @@ di=DeviceInterface(
     terminal_list=[
         ########################################################################
         Terminal(
+            name='UXN1330',
+            regAddrWidth=8,
+            regDataWidth=8, # NOTE need to fix nitro get width
+            register_list=[
+                Register(name='version',
+                         type='int',
+                         mode='read',
+                         subregs=[SubReg(name='minor', width=16),
+                                  SubReg(name='major', width=16)],
+                         comment="FX3 release version"
+                         ),
+                Register(name='lp_b',
+                         mode='write',
+                         type='int',
+                         width=1,
+                         addr=26,
+                         comment='Write 0 to enable, 1 to disable low power mode' 
+                         ),
+                Register(name='v18_en',
+                         mode='write',
+                         type='int',
+                         width=1,
+                         addr=27,
+                         comment='Write 1 or 0 to enable/disable 1.8 volts'
+                         ),
+            ]
+        ),
+	
+        ########################################################################
+        Terminal(
             name="SLAVE_I2C",
             regAddrWidth=8,
             regDataWidth=32,

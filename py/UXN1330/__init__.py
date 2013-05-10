@@ -45,29 +45,15 @@ class UXN1330(nitro.DevBase):
 
 
     ###################### FPGA methods ########################################
-    #def reboot_fpga(self):
-    #    """Reboots the FPGA from its PROM"""
-    #    log.info("Booting FPGA from SPI prom")
-    #    self.set("FPGA_CTRL", "boot_fpga", 1);
-    #    time.sleep(.2)
-    #    if not(self.is_fpga_programmed()):
-    #        raise Exception("The FPGA did not boot correctly.")
-
-    #def program_fpga(self, filename):
-    #    """Programs the FPGA with the provided bitfile"""
-    #    log.info("Programming FPGA with %s" % filename)
-    #    self.write("PROGRAM_FPGA", 0, open(filename, 'rb').read(), 10000)
-    #    if not self.is_fpga_programmed(): 
-    #        raise Exception("The FPGA did not program." ) 
-    #    log.info("Programming succeeded")
+    def reboot_fpga(self):
+        """Reboots the FPGA from its PROM"""
+        log.info("Booting FPGA from SPI prom")
+        self.set("FPGA_CTRL", "boot_fpga", 1);
 
     def program_fpga_prom(self, filename):
         """Reprograms spi flash with new prom file.  Forces a reboot the FPGA to run this bitfile when it is complete"""
         from nitro_parts.Numonyx import M25P
-        #self.set("FX2_SFR", "IOA.prog_b", 0) # reset FPGA
+        self.set("FPGA_CTRL", "reset_fpga", 1) # reset FPGA
         M25P.program(self, filename, "FPGA_PROM_DATA", "FPGA_PROM_CTRL")
-        #self.reboot_fpga()
+        self.reboot_fpga()
     
-    #def is_fpga_programmed(self):
-    #    """Returns true if the FPGA is programmed and running a valid bitfile."""
-    #    return bool(self.get("FX2_SFR", "IOA.done"))
