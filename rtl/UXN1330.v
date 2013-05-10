@@ -248,9 +248,6 @@ module UXN1330
    assign fx3_fd    = (fx3_fd_oe) ? fx3_fd_out : 32'bZZZZ;
    assign fx3_fd_in = fx3_fd;
 
-   wire [15:0] 	i2c_addr;
-   wire [7:0] 	i2c_data;
-   
    Fx3HostInterface Fx3HostInterface
      (
       .ifclk(ifclk),
@@ -267,9 +264,6 @@ module UXN1330
       .fx3_fd_in(fx3_fd_in),
       .fx3_fd_oe(fx3_fd_oe),
 
-      .i2c_addr(i2c_addr),
-      .i2c_data(i2c_data),
-      
       .di_term_addr (di_term_addr ),
       .di_reg_addr  (di_reg_addr  ),
       .di_len       (di_len       ),
@@ -290,9 +284,6 @@ module UXN1330
       .resetb                           (resetb),
       .ifclk                            (ifclk),
 
-      .i2c_addr(i2c_addr),
-      .i2c_data(i2c_data),
-      
       .fx3_int_b                        (fx3_int_b),
       .di_term_addr                     (di_term_addr),
       .di_reg_addr                      (di_reg_addr),
