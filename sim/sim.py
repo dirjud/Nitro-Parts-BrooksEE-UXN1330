@@ -20,13 +20,13 @@ dev.set_di(d["di"])
 #t = ubitest.DramPatTest(config)
 try:
     ## TEST DRAM access
-    buf1 = "\xAA\x55" * 8
-    dev.write("DRAM", 0, buf1)
+    buf1 = numpy.random.random_integers(0, 0xFFFFFFFF, 32).astype(numpy.uint32)
+    dev.write("DRAM", 0, buf1, 2)
     
-    buf2 = "\x00" * len(buf1)
-    dev.read("DRAM", 0, buf2)
+    buf2 = numpy.zeros_like(buf1)
+    dev.read("DRAM", 0, buf2, 1)
     
-    if buf1 == buf2:
+    if (buf1 == buf2).all():
         print "**** DRAM TEST PASSED ****"
     else:
         raise Exception("**** DRAM TEST FAILED ****")
