@@ -17,6 +17,7 @@ SOURCE += ../../../Microchip/M24XX/fx3/m24xx.c
 SOURCE += ../../../Numonyx/M25P/fx3/m25p.c
 SOURCE += ../../../Xilinx/Spartan/fx3/spartan.c
 SOURCE += $(FX3DIR)main.c 
+SOURCE += $(FX3DIR)fx3_term.c
 
 # add any custom debugging or cflags
 CCFLAGS := -DENABLE_LOGGING
