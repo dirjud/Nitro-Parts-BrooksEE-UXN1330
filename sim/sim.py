@@ -20,11 +20,11 @@ dev.set_di(d["di"])
 #t = ubitest.DramPatTest(config)
 try:
     ## TEST DRAM access
-    buf1 = numpy.random.random_integers(0, 0xFFFFFFFF, 32).astype(numpy.uint32)
-    dev.write("DRAM", 0, buf1, 2)
+    buf1 = numpy.random.random_integers(0, 0xFFFFFFFF, 1024).astype(numpy.uint32)
+    dev.write("DRAM", 0, buf1, 4)
     
     buf2 = numpy.zeros_like(buf1)
-    dev.read("DRAM", 0, buf2, 1)
+    dev.read("DRAM", 0, buf2, 4)
     
     if (buf1 == buf2).all():
         print "**** DRAM TEST PASSED ****"
@@ -37,10 +37,10 @@ try:
     
     x = numpy.zeros(40, dtype=numpy.uint32)
     dev.read("DUMMY_FPGA", 0, x)
-    if (x == 0xBBAA9988).all():
+    if (x[::2] == 0xBBAA9988).all() and (x[1::2] == 0x44556677).all():
         print "**** FPGA DUMMY TERM READ PASSED ****"
     else:
-        raise Exception("**** FPGA DUMMY TERM READ PASSED ****")
+        raise Exception("**** FPGA DUMMY TERM READ FAILED ****")
 
     ## Test FPGA terminal access
     version = numpy.zeros(2, dtype=numpy.uint16)
@@ -51,4 +51,4 @@ try:
 finally:
 
     tb.adv(100)
-    tb.end()
+#    tb.end()

@@ -262,18 +262,22 @@ module mig_38 #
 
    wire [27:0] c3_p0_mem_addr;
    wire [31:0] c3_p0_mem_rdata;
+   wire [31:0] c3_p0_mem_rdata1;
    wire [31:0] c3_p0_mem_wdata;
    wire        c3_p0_mem_we;
    wire [27:0] c3_p1_mem_addr;
    wire [31:0] c3_p1_mem_rdata;
+   wire [31:0] c3_p1_mem_rdata1;
    wire [31:0] c3_p1_mem_wdata;
    wire        c3_p1_mem_we;
    wire [27:0] c3_p2_mem_addr;
    wire [31:0] c3_p2_mem_rdata;
+   wire [31:0] c3_p2_mem_rdata1;
    wire [31:0] c3_p2_mem_wdata;
    wire        c3_p2_mem_we;
    wire [27:0] c3_p3_mem_addr;
    wire [31:0] c3_p3_mem_rdata;
+   wire [31:0] c3_p3_mem_rdata1;
    wire [31:0] c3_p3_mem_wdata;
    wire        c3_p3_mem_we;
    
@@ -304,6 +308,7 @@ module mig_38 #
       .pX_wr_underrun                   (c3_p0_wr_underrun),
       .mem_addr                         (c3_p0_mem_addr[27:0]),
       .mem_rdata                        (c3_p0_mem_rdata[31:0]),
+      .mem_rdata1                       (c3_p0_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p0_mem_wdata[31:0]),
       .mem_we                           (c3_p0_mem_we)
       );
@@ -313,6 +318,7 @@ module mig_38 #
       end
    end
    assign c3_p0_mem_rdata= memory[c3_p0_mem_addr[23:0]];
+   assign c3_p0_mem_rdata1=memory[c3_p0_mem_addr[23:0]+1];
    
    port_ctrl p1_port_ctrl
      (.async_rst                        (!c3_sys_rst_i),
@@ -341,6 +347,7 @@ module mig_38 #
       .pX_wr_underrun                   (c3_p1_wr_underrun),
       .mem_addr                         (c3_p1_mem_addr[27:0]),
       .mem_rdata                        (c3_p1_mem_rdata[31:0]),
+      .mem_rdata1                       (c3_p1_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p1_mem_wdata[31:0]),
       .mem_we                           (c3_p1_mem_we)
       );
@@ -350,6 +357,7 @@ module mig_38 #
       end
    end
    assign c3_p1_mem_rdata= memory[c3_p1_mem_addr[23:0]];
+   assign c3_p1_mem_rdata1=memory[c3_p1_mem_addr[23:0]+1];
    
    port_ctrl p2_port_ctrl
      (.async_rst                        (!c3_sys_rst_i),
@@ -378,6 +386,7 @@ module mig_38 #
       .pX_wr_underrun                   (c3_p2_wr_underrun),
       .mem_addr                         (c3_p2_mem_addr[27:0]),
       .mem_rdata                        (c3_p2_mem_rdata[31:0]),
+      .mem_rdata1                       (c3_p2_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p2_mem_wdata[31:0]),
       .mem_we                           (c3_p2_mem_we)
       );
@@ -387,6 +396,7 @@ module mig_38 #
       end
    end
    assign c3_p2_mem_rdata= memory[c3_p2_mem_addr[23:0]];
+   assign c3_p2_mem_rdata1=memory[c3_p2_mem_addr[23:0]+1];
    
    port_ctrl p3_port_ctrl
      (.async_rst                        (!c3_sys_rst_i),
@@ -415,6 +425,7 @@ module mig_38 #
       .pX_wr_underrun                   (c3_p3_wr_underrun),
       .mem_addr                         (c3_p3_mem_addr[27:0]),
       .mem_rdata                        (c3_p3_mem_rdata[31:0]),
+      .mem_rdata1                       (c3_p3_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p3_mem_wdata[31:0]),
       .mem_we                           (c3_p3_mem_we)
       );
@@ -424,6 +435,7 @@ module mig_38 #
       end
    end
    assign c3_p3_mem_rdata= memory[c3_p3_mem_addr[23:0]];
+   assign c3_p3_mem_rdata1= memory[c3_p3_mem_addr[23:0]+1];
 
 
 `else   
@@ -997,6 +1009,7 @@ module port_ctrl
    output reg [27:0] mem_addr,
    output mem_we,
    input  [31:0] mem_rdata,
+   input  [31:0] mem_rdata1,
    output [31:0] mem_wdata
    );
    
@@ -1069,8 +1082,9 @@ module port_ctrl
                reading   <= 0;
             end else begin
                rfifo[rfifo_waddr] <= mem_rdata;
-               rfifo_waddr <= rfifo_waddr + 1;
-               mem_addr    <= mem_addr + 1;
+               rfifo[rfifo_waddr+1] <= mem_rdata1;
+               rfifo_waddr <= rfifo_waddr + 2;
+               mem_addr    <= mem_addr + 2;
             end
          end
       end

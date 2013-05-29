@@ -56,7 +56,6 @@ SYN_FILES = \
 	rtl_auto/FPGATerminal.v \
 	rtl_auto/DRAM_CTRLTerminal.v \
 	rtl/ProjectTop.v \
-	$(NITRO_PARTS_DIR)/lib/i2c/rtl/i2c_slave.v \
 
 # CUSTOM targets should go here
 

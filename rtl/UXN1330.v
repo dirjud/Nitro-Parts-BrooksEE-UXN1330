@@ -702,7 +702,7 @@ module UXN1330
       .di_write                         (dram_write),
       .di_reg_addr                      (di_reg_addr),
       .di_read_rdy                      (dram_read_rdy),
-      .di_read_req                      (di_read_rdy),
+      .di_read_req                      (di_read_req),
       .di_reg_datao                     (dram_reg_datao),
       .di_transfer_status               (dram_transfer_status),
       .di_write_rdy                     (dram_write_rdy),
