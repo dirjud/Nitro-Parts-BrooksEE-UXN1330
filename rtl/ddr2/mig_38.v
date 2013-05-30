@@ -1082,9 +1082,11 @@ module port_ctrl
                reading   <= 0;
             end else begin
                rfifo[rfifo_waddr] <= mem_rdata;
-               rfifo[rfifo_waddr+1] <= mem_rdata1;
-               rfifo_waddr <= rfifo_waddr + 2;
-               mem_addr    <= mem_addr + 2;
+               rfifo_waddr <= rfifo_waddr + 1;
+               mem_addr    <= mem_addr + 1;
+               //rfifo[rfifo_waddr+1] <= mem_rdata1;
+               //rfifo_waddr <= rfifo_waddr + 2;
+               //mem_addr    <= mem_addr + 2;
             end
          end
       end
