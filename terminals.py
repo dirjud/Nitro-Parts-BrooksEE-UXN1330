@@ -37,6 +37,13 @@ di=DeviceInterface(
                                   SubReg(name='major', width=16)],
                          comment="FX3 release version"
                          ),
+                Register(name='vcon_en',
+                         mode='write',
+                         type='int',
+                         width=1,
+                         addr=22,
+                         comment='Write 1 to enable, 0 to disable vcon' 
+                         ),
                 Register(name='lp_b',
                          mode='write',
                          type='int',
@@ -50,6 +57,13 @@ di=DeviceInterface(
                          width=1,
                          addr=27,
                          comment='Write 1 or 0 to enable/disable 1.8 volts'
+                         ),
+                Register(name='vcon_pot',
+                         mode='write',
+                         type='int',
+                         width=1,
+                         addr=0x5e,
+                         comment='Write 0-127 to adjust vcon voltage.'
                          ),
             ]
         ),
