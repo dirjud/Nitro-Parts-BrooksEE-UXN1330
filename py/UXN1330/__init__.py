@@ -41,6 +41,31 @@ def program_new_pcb(fx3_firmware, fpga_firmware, VID=default_VID, PID=default_PI
     fx3.program_new_pcb(fx3_firmware, VID=VID, PID=PID, di_file=di_file)
 
 ################################################################################
+def set_vcon (dev, volts=3.3, enable=True):
+    """
+        This function calculates the right potentiometer value for the vcon
+        circuit and then enables the vcon chip. Provides approximately the
+        intended voltage to the daughter board.
+
+        r1 = D/127*100e3
+        r2 = 22e3
+        vout = 0.62*(r1/r2+1)
+        D=22e3*(vout/.62-1) / 100e3 * 127
+    """
+    if enable:
+        v=float(volts)
+        d=int(round(22e3*(v/.62-1) / 100e3 * 127))
+        d=max(d,0)
+        d=min(d,127)
+        log.debug ( "vcon pot value: %d" % d )
+        dev.set('UXN1330','vcon_pot', d )
+
+    dev.set('UXN1330','vcon_en', 1 if enable else 0 )
+    # convert back to volts so user can check against input
+    return 0 if not enable else .62*(d/127.*100e3/22e3+1)
+
+
+################################################################################
 class UXN1330(nitro.DevBase):
 
 
@@ -57,3 +82,6 @@ class UXN1330(nitro.DevBase):
         M25P.program(self, filename, "FPGA_PROM_DATA", "FPGA_PROM_CTRL")
         self.reboot_fpga()
     
+
+    def set_vcon(self,volts=3.3, enable=True):
+        return set_vcon(self,volts, enable)
