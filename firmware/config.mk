@@ -3,6 +3,8 @@
 MODULE = uxn1330
 VID = 0x1fe1
 PID = 0x1330
+USB2_POWER = 0xFA # 500 mA
+USB3_POWER = 0x58 # 704 mA
 
 # the required assembly files
 SOURCE_ASM = $(CYFX3SDK)/firmware/common/cyfx_gcc_startup.S
@@ -20,7 +22,7 @@ SOURCE += $(FX3DIR)main.c
 SOURCE += $(FX3DIR)fx3_term.c
 
 # add any custom debugging or cflags
-CCFLAGS := -DENABLE_LOGGING
+#CCFLAGS := -DENABLE_LOGGING
 CCFLAGS += -DDEBUG_SPARTAN
 CCFLAGS += -DDEBUG_CPU_HANDLER
 
