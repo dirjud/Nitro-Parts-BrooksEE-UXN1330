@@ -20,9 +20,9 @@ SOURCE += $(FX3DIR)main.c
 SOURCE += $(FX3DIR)fx3_term.c
 
 # add any custom debugging or cflags
-CCFLAGS := -DENABLE_LOGGING
-CCFLAGS += -DDEBUG_SPARTAN
-CCFLAGS += -DDEBUG_CPU_HANDLER
+#CCFLAGS := -DENABLE_LOGGING
+#CCFLAGS += -DDEBUG_SPARTAN
+#CCFLAGS += -DDEBUG_CPU_HANDLER
 
 # any custom includes
 Include = -I../../../Numonyx/M25P/fx3
