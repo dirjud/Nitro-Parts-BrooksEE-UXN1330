@@ -58,7 +58,7 @@ def set_vcon (dev, volts=3.3, enable=True):
         d=max(d,0)
         d=min(d,127)
         log.debug ( "vcon pot value: %d" % d )
-        dev.set('UXN1330','vcon_pot', d )
+        #dev.set('UXN1330','vcon_pot', d )
 
     dev.set('UXN1330','vcon_en', 1 if enable else 0 )
     # convert back to volts so user can check against input
@@ -85,3 +85,11 @@ class UXN1330(nitro.DevBase):
 
     def set_vcon(self,volts=3.3, enable=True):
         return set_vcon(self,volts, enable)
+
+
+    def init_system(self):
+        # 130606 board can stream in lp mode if on USB2 bus.
+        # haven't yet got lp_b to work on USB3
+        if not self.get('FX3','USB3'):
+            self.set('UXN1330','lp_b', 0)
+            log.info ( "Enabled low power mode for usb2" )
