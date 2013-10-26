@@ -62,7 +62,10 @@ module UXN1330_tb
    wire n34n, n34p, n35n, n35p, n36n, n36p, n37n, n37p, n38n, n38p, n39n, n39p;
    wire n40n, n40p, n41n, n41p, n42n, n42p, n43n, n43p, n44n, n44p, n45n, n45p;
    wire n46n, n46p, n47n, n47p, n48n, n48p, n49n, n49p, n50n, n50p, n51n, n51p;
-   wire n52n, n52p, n53n, n53p, n61n, n61p, n74n, n74p;
+   wire n52n, n52p, n53p, n61n, n61p, n74n, n74p;
+`ifndef VREF_BANKN
+   wire n53n;
+`endif
    
    wire           led_b;          
    wire [14:0]          sdram_addr;     
@@ -235,7 +238,9 @@ module UXN1330_tb
       .n51p                             (n51p),
       .n52n                             (n52n),
       .n52p                             (n52p),
+`ifndef VREF_BANKN
       .n53n                             (n53n),
+`endif
       .n53p                             (n53p),
       .n61n                             (n61n),
       .n61p                             (n61p),
@@ -385,7 +390,9 @@ module UXN1330_tb
       .n51p                             (n51p),
       .n52n                             (n52n),
       .n52p                             (n52p),
+`ifndef VREF_BANKN
       .n53n                             (n53n),
+`endif
       .n53p                             (n53p),
       .n61n                             (n61n),
       .n61p                             (n61p),

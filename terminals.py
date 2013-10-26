@@ -110,11 +110,14 @@ di=DeviceInterface(
                          comment='Software reset of the FPGA.',
                          init=0,
                          ),
-                Register(name="led_sel",
+                Register(name="led",
                          type="int",
                          mode="write",
-                         width=4, 
-                         init=0, 
+                         subregs=[
+                                  SubReg(name="sel", width=4, init=0, comment="Selects what drives the LEDs on the UXN1230 board.", valuemap=dict(clocks=0x0, static=0x1, off=0xF)),
+                                  SubReg(name="static", width=4, init=0xF, comment="Sets the static values driven to the LEDs when led.sel is 'static'"),
+                                  ],
+                         comment="Led mode settings",
                          ),
                 ]),
 

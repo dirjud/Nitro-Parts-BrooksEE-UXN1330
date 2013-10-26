@@ -177,7 +177,9 @@ module UXN1330
    inout 	 n51p,
    inout 	 n52n,
    inout 	 n52p,
-   inout 	 n53n,
+`ifndef VREF_BANKN
+   inout  	 n53n, // synthesis attribute LOC of n53n is N14 */
+`endif
    inout 	 n53p,
    inout 	 n61n,
    inout 	 n61p,
@@ -414,7 +416,9 @@ module UXN1330
       .n51p                             (n51p),
       .n52n                             (n52n),
       .n52p                             (n52p),
+`ifndef VREF_BANKN
       .n53n                             (n53n),
+`endif
       .n53p                             (n53p),
       .n61n                             (n61n),
       .n61p                             (n61p),

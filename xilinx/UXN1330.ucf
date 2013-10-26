@@ -245,7 +245,9 @@ NET "n51n"            LOC="T18";
 NET "n51p"            LOC="T17";
 NET "n52n"            LOC="U18";
 NET "n52p"            LOC="U17";
-NET "n53n"            LOC="N14";
+# TODO find a way to specify this when we don't
+# need vref functionality.  Perhaps generate the ucf file?
+#NET "n53n"            LOC="N14";
 NET "n53p"            LOC="M14";
 NET "n61n"            LOC="M13";
 NET "n61p"            LOC="L14";
