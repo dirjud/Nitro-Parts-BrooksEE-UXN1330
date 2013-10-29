@@ -10,6 +10,10 @@ UXN1330_SIM_FILES = \
 	$(NITRO_PARTS_DIR)/lib/HostInterface/models/fx3.v \
         $(UXN1330_DIR)/sim/ddr2/ddr2_model_c3.v \
 
+# extra ../ because sim is executed from sim dir
+VERILATOR_CPPFLAGS += -I$(abspath ../$(UXN1330_DIR)/sim)
+VERILATOR_CPP_FILE = ../($UXN1330_DIR)sim/tb.cpp ../($UXN1330_DIR)sim/vpycallbacks.cpp
+
 UXN1330_SYN_FILES = \
 	$(UXN1330_DIR)/rtl/UXN1330.v \
 	$(NITRO_PARTS_DIR)/lib/HostInterface/rtl/Fx3HostInterface.v \

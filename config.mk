@@ -17,6 +17,7 @@ INC_FILES = rtl_auto/FPGATerminalInst.v     \
 	    rtl_auto/DRAM_CTRLTerminalInst.v     \
 	    rtl_auto/terminals_defs.v     \
 	    sim/tb.cpp \
+		sim/vpycallbacks.cpp \
 	    sim/isim_tests.v \
 	    config.mk \
 

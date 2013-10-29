@@ -8,6 +8,8 @@
 #include "VUXN1330_tb_UXN1330_tb.h"
 #include "VUXN1330_tb_fx3.h"
 
+#include "vpycallbacks.h"
+
 #if VM_TRACE
 #include "verilated_vcd_c.h"
 
@@ -138,6 +140,37 @@ static PyObject *end(PyObject *self, PyObject *args) {
   Py_RETURN_NONE; 
 }
 
+
+static PyObject *registerHandler(PyObject *self, PyObject *args) {
+
+    PyObject *func;
+    if (PyArg_ParseTuple ( args, "O:callback", &func )) {
+        if (!PyFunction_Check(func)) {
+            PyErr_SetString(PyExc_TypeError, "callback not a function.");
+            return NULL;
+        }
+        printf ( "registering func %p\n", func );
+        VPyCallbacks::registerHandler(func);
+        Py_RETURN_NONE;
+    }
+    return NULL;
+}
+
+static PyObject *ndarrayFromPtr(PyObject *self, PyObject *args) {
+    unsigned long addr;
+    int size;
+    if (PyArg_ParseTuple ( args, "ki", &addr, &size )) {
+
+        void* paddr = (void*)addr; 
+        printf( "void* addr %08x\n", addr );
+        npy_intp dims[] = {size};
+        PyObject *a = PyArray_SimpleNewFromData ( 1, dims, NPY_BYTE, paddr );
+        // does this need a ref inc?
+        return a;
+    }
+    return NULL;
+}
+
 #ifdef USER_TB
 #include <user_tb.cpp>
 #endif
@@ -150,6 +183,8 @@ static PyMethodDef Vtb_methods[] = {
   {"adv",  adv,  METH_VARARGS, "Advances sim x number of clk cycles." },
   {"end",  end,  METH_NOARGS, "Ends simulation & deletes all sim objects." },
   {"get_dev", get_dev, METH_NOARGS, "Returns a dev handle." },
+  {"registerHandler", registerHandler, METH_VARARGS, "Register a callback handler for global events." },
+  {"ndarrayFromPtr", ndarrayFromPtr, METH_VARARGS, "Convert an int addr to void* and return as ndarray."}, 
 #ifdef USER_PYTHON_METHODS
 USER_PYTHON_METHODS
 #endif
