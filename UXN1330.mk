@@ -14,6 +14,8 @@ UXN1330_SIM_FILES = \
 VERILATOR_CPPFLAGS += -I$(abspath ../$(UXN1330_DIR)/sim)
 VERILATOR_CPP_FILE = ../($UXN1330_DIR)sim/tb.cpp ../($UXN1330_DIR)sim/vpycallbacks.cpp
 
+SIM_DEFS += IMAGER_CALLBACKS
+
 UXN1330_SYN_FILES = \
 	$(UXN1330_DIR)/rtl/UXN1330.v \
 	$(NITRO_PARTS_DIR)/lib/HostInterface/rtl/Fx3HostInterface.v \
