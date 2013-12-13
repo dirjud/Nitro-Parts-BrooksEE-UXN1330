@@ -90,6 +90,7 @@ class UXN1330(nitro.DevBase):
     def init_system(self):
         # 130606 board can stream in lp mode if on USB2 bus.
         # haven't yet got lp_b to work on USB3
-        if not self.get('FX3','USB3'):
-            self.set('UXN1330','lp_b', 0)
-            log.info ( "Enabled low power mode for usb2" )
+        #if not self.get('FX3','USB3'):
+        #    self.set('UXN1330','lp_b', 0)
+        #    log.info ( "Enabled low power mode for usb2" )
+        pass
