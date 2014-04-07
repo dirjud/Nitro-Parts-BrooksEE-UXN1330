@@ -82,6 +82,8 @@ class UXN1330(nitro.DevBase):
         M25P.program(self, filename, "FPGA_PROM_DATA", "FPGA_PROM_CTRL")
         self.reboot_fpga()
     
+    def program_prom(self,filename):
+        fx3.program_fx3_prom(self,filename,'FX3_PROM')
 
     def set_vcon(self,volts=3.3, enable=True):
         return set_vcon(self,volts, enable)
