@@ -12,7 +12,7 @@ UXN1330_SIM_FILES = \
 
 # extra ../ because sim is executed from sim dir
 VERILATOR_CPPFLAGS += -I$(abspath ../$(UXN1330_DIR)/sim)
-VERILATOR_CPP_FILE = ../($UXN1330_DIR)sim/tb.cpp ../($UXN1330_DIR)sim/vpycallbacks.cpp
+VERILATOR_CPP_FILE = ../$(UXN1330_DIR)/sim/tb.cpp ../$(UXN1330_DIR)/sim/vpycallbacks.cpp
 
 SIM_DEFS += IMAGER_CALLBACKS
 
