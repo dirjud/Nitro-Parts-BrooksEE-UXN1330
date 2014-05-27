@@ -63,7 +63,7 @@ uint16_t uxn1330_read(CyU3PDmaBuffer_t* pBuf) {
     case UXN1330_LP_B:
     case UXN1330_V18_EN:
     case UXN1330_VCON_EN:
-        if (gRdwrCmd.header.transfer_length==2) {
+        if (gRdwrCmd.header.transfer_length==1) {
             CyBool_t val;
             CyU3PReturnStatus_t ret;
             ret=CyU3PGpioGetValue( gRdwrCmd.header.reg_addr, &val );
