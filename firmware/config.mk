@@ -5,10 +5,9 @@ VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x104
+FIRMWARE_VERSION = 0x105
 
 # the required assembly files
-SOURCE_ASM = $(CYFX3SDK)/firmware/common/cyfx_gcc_startup.S
 SOURCE += $(FX3DIR)dscr.c 
 SOURCE += $(FX3DIR)error_handler.c
 SOURCE += $(FX3DIR)cpu_handler.c
@@ -29,4 +28,4 @@ SOURCE += $(FX3DIR)fx3_term.c
 #CCFLAGS += -DDEBUG_MAIN
 
 # any custom includes
-Include = -I../../../Numonyx/M25P/fx3
+Include += -I../../../Numonyx/M25P/fx3
