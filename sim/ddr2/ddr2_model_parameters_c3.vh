@@ -211,7 +211,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `define sg5E
+    `else
+    `define sg5E
         parameter TCK_MIN          =    5000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     150; // tJIT(duty) ps Half Period Jitter
@@ -328,33 +329,38 @@
         parameter DQ_BITS          =       4; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `ifdef x8
+    `else
+    `ifdef x8
         parameter DM_BITS          =       1; // Number of Data Mask bits
         parameter ROW_BITS         =      13; // Number of Address bits
         parameter COL_BITS         =      10; // Number of Column bits
         parameter DQ_BITS          =       8; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `define x16
+    `else
+    `define x16
         parameter DM_BITS          =       2; // Number of Data Mask bits
         parameter ROW_BITS         =      13; // Number of Address bits
         parameter COL_BITS         =       9; // Number of Column bits
         parameter DQ_BITS          =      16; // Number of Data bits
         parameter DQS_BITS         =       2; // Number of Dqs bits
         parameter TRRD             =   10000; // tRRD   Active bank a to Active bank b command time
-    `endif `endif
+    `endif
+    `endif
 
     `ifdef QUAD_RANK
         `define DUAL_RANK // also define DUAL_RANK
         parameter CS_BITS          =       4; // Number of Chip Select Bits
         parameter RANKS            =       4; // Number of Chip Select Bits
-    `else `ifdef DUAL_RANK
+    `else
+    `ifdef DUAL_RANK
         parameter CS_BITS          =       2; // Number of Chip Select Bits
         parameter RANKS            =       2; // Number of Chip Select Bits
     `else
         parameter CS_BITS          =       2; // Number of Chip Select Bits
         parameter RANKS            =       1; // Number of Chip Select Bits
-    `endif `endif
+    `endif
+    `endif
 
         // Size Parameters
         parameter BA_BITS          =       2; // Set this parmaeter to control how many Bank Address bits
@@ -396,7 +402,8 @@
         parameter TANPD            =       4; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =      11; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   13125; // CL     ps    Minimum CAS Latency
-    `else `ifdef sg25E
+    `else
+    `ifdef sg25E
         parameter TCK_MIN          =    2500; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     100; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     100; // tJIT(duty) ps Half Period Jitter
@@ -426,7 +433,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =      10; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   12500; // CL     ps    Minimum CAS Latency
-    `else `ifdef sg25
+    `else
+    `ifdef sg25
         parameter TCK_MIN          =    2500; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     100; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     100; // tJIT(duty) ps Half Period Jitter
@@ -456,7 +464,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =      10; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `ifdef sg3E
+    `else
+    `ifdef sg3E
         parameter TCK_MIN          =    3000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     125; // tJIT(duty) ps Half Period Jitter
@@ -486,7 +495,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   12000; // CL     ps    Minimum CAS Latency
-    `else `ifdef sg3
+    `else
+    `ifdef sg3
         parameter TCK_MIN          =    3000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     125; // tJIT(duty) ps Half Period Jitter
@@ -516,7 +526,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `ifdef sg37E
+    `else
+    `ifdef sg37E
         parameter TCK_MIN          =    3750; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     125; // tJIT(duty) ps Half Period Jitter
@@ -546,7 +557,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `define sg5E
+    `else
+    `define sg5E
         parameter TCK_MIN          =    5000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     150; // tJIT(duty) ps Half Period Jitter
@@ -883,7 +895,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `define sg5E
+    `else
+    `define sg5E
         parameter TCK_MIN          =    5000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     150; // tJIT(duty) ps Half Period Jitter
@@ -1001,7 +1014,8 @@
         parameter DQ_BITS          =       4; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `ifdef x8
+    `else 
+    `ifdef x8
         parameter ADDR_BITS        =      14; // Address Bits
         parameter ROW_BITS         =      14; // Number of Address bits
         parameter COL_BITS         =      10; // Number of Column bits
@@ -1009,7 +1023,8 @@
         parameter DQ_BITS          =       8; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `define x16
+    `else
+    `define x16
         parameter ADDR_BITS        =      13; // Address Bits
         parameter ROW_BITS         =      13; // Number of Address bits
         parameter COL_BITS         =      10; // Number of Column bits
@@ -1023,13 +1038,15 @@
         `define DUAL_RANK // also define DUAL_RANK
         parameter CS_BITS          =       4; // Number of Chip Select Bits
         parameter RANKS            =       4; // Number of Chip Select Bits
-    `else `ifdef DUAL_RANK
+    `else
+    `ifdef DUAL_RANK
         parameter CS_BITS          =       2; // Number of Chip Select Bits
         parameter RANKS            =       2; // Number of Chip Select Bits
     `else
         parameter CS_BITS          =       2; // Number of Chip Select Bits
         parameter RANKS            =       1; // Number of Chip Select Bits
-    `endif `endif
+    `endif
+    `endif
 
         // Size Parameters
         parameter BA_BITS          =       3; // Set this parmaeter to control how many Bank Address bits
@@ -1038,7 +1055,8 @@
         parameter BL_BITS          =       3; // the number of bits required to count to MAX_BL
         parameter BO_BITS          =       2; // the number of Burst Order Bits
 
-`else `define x2Gb
+`else
+`define x2Gb
 
     `ifdef sg187E
         parameter TCK_MIN          =    1875; // tCK    ps    Minimum Clock Cycle Time
@@ -1220,7 +1238,8 @@
         parameter TANPD            =       3; // tANPD  tCK   ODT to power-down entry latency
         parameter TAXPD            =       8; // tAXPD  tCK   ODT power-down exit latency
         parameter CL_TIME          =   15000; // CL     ps    Minimum CAS Latency
-    `else `define sg5E
+    `else
+    `define sg5E
         parameter TCK_MIN          =    5000; // tCK    ps    Minimum Clock Cycle Time
         parameter TJIT_PER         =     125; // tJIT(per)  ps Period JItter
         parameter TJIT_DUTY        =     150; // tJIT(duty) ps Half Period Jitter
@@ -1338,7 +1357,8 @@
         parameter DQ_BITS          =       4; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `ifdef x8
+    `else
+    `ifdef x8
         parameter ADDR_BITS        =      15; // Address Bits
         parameter ROW_BITS         =      15; // Number of Address bits
         parameter COL_BITS         =      10; // Number of Column bits
@@ -1346,7 +1366,8 @@
         parameter DQ_BITS          =       8; // Number of Data bits
         parameter DQS_BITS         =       1; // Number of Dqs bits
         parameter TRRD             =    7500; // tRRD   Active bank a to Active bank b command time
-    `else `define x16
+    `else 
+    `define x16
         parameter ADDR_BITS        =      14; // Address Bits
         parameter ROW_BITS         =      14; // Number of Address bits
         parameter COL_BITS         =      10; // Number of Column bits

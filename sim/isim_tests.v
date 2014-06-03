@@ -33,6 +33,7 @@ module isim_tests;
 
    parameter BUF_LEN=516;
    
+   UXN1330_tb UXN1330_tb();
 
    reg [29:0]                        addr;
    
@@ -47,7 +48,7 @@ module isim_tests;
 
 `ifdef TRACE      
       $dumpfile ( "isim.vcd" );
-      $dumpvars ( 3, UXN1330_tb );
+      $dumpvars ( 4, UXN1330_tb );
       $display( "Running Simulation" );
 `endif
 
@@ -56,7 +57,8 @@ module isim_tests;
       while (UXN1330_tb.UXN1330.ProjectTop.resetb == 0)
         #10000 $display("Waiting for device to come out of reset");
       
-      UXN1330_tb.fx2.getW(`TERM_FPGA, `FPGA_version,  `WIDTH_FPGA_version, version);
+      $display ( "get the FPGA version." );
+      UXN1330_tb.fx3.getW(`TERM_FPGA, `FPGA_version,  `WIDTH_FPGA_version, version);
       $display("FPGA Version=0x%x", version);
 
 
@@ -84,7 +86,7 @@ module isim_tests;
 
    task get_status();
       begin
-         UXN1330_tb.fx2.getW(`TERM_DRAM_CTRL, `DRAM_CTRL_status, `WIDTH_DRAM_CTRL_status, dram_status);
+         UXN1330_tb.fx3.getW(`TERM_DRAM_CTRL, `DRAM_CTRL_status, `WIDTH_DRAM_CTRL_status, dram_status);
          pll_locked = dram_status[`DRAM_CTRL_status_pll_locked];
          calib_done = dram_status[`DRAM_CTRL_status_calib_done];
       end
@@ -98,36 +100,36 @@ module isim_tests;
          addr = 30'h3FFFFFC & $random;
          for(i=0; i<BUF_LEN; i=i+1) begin
             wr_buf[i] = $random;
-            UXN1330_tb.fx2.rdwr_data_buf[i] = wr_buf[i];
+            UXN1330_tb.fx3.rdwr_data_buf[i] = wr_buf[i];
          end
          
          $display("Writing %d random bytes to address 0x%x in DRAM", BUF_LEN, addr);
-         UXN1330_tb.fx2.write(`TERM_DRAM, addr, BUF_LEN);
+         UXN1330_tb.fx3.write(`TERM_DRAM, addr, BUF_LEN);
 
          for(i=0; i<BUF_LEN; i=i+1) begin
-            UXN1330_tb.fx2.rdwr_data_buf[i] = 8'hXX;
+            UXN1330_tb.fx3.rdwr_data_buf[i] = 8'hXX;
          end
          
          $display("Reading %d bytes from address 0x%x in DRAM", BUF_LEN, addr);
-         UXN1330_tb.fx2.read(`TERM_DRAM,  addr, BUF_LEN);
+         UXN1330_tb.fx3.read(`TERM_DRAM,  addr, BUF_LEN);
 
          
          results = 1;
          for(i=0; i<BUF_LEN; i=i+1) begin
-            if(wr_buf[i] !== UXN1330_tb.fx2.rdwr_data_buf[i]) begin
+            if(wr_buf[i] !== UXN1330_tb.fx3.rdwr_data_buf[i]) begin
                results = 0;
-               $display(" write/read error at position %d: wrote 0x%x  read:0x%x", i, wr_buf[i], UXN1330_tb.fx2.rdwr_data_buf[i]);
+               $display(" write/read error at position %d: wrote 0x%x  read:0x%x", i, wr_buf[i], UXN1330_tb.fx3.rdwr_data_buf[i]);
             end
          end
 
 	 #100000
 
          $display("Again Reading %d bytes from address 0x%x in DRAM", BUF_LEN, addr);
-         UXN1330_tb.fx2.read(`TERM_DRAM,  addr, BUF_LEN);
+         UXN1330_tb.fx3.read(`TERM_DRAM,  addr, BUF_LEN);
          for(i=0; i<BUF_LEN; i=i+1) begin
-            if(wr_buf[i] !== UXN1330_tb.fx2.rdwr_data_buf[i]) begin
+            if(wr_buf[i] !== UXN1330_tb.fx3.rdwr_data_buf[i]) begin
                results = 0;
-               $display(" 2nd pass write/read error at position %d: wrote 0x%x  read:0x%x", i, wr_buf[i], UXN1330_tb.fx2.rdwr_data_buf[i]);
+               $display(" 2nd pass write/read error at position %d: wrote 0x%x  read:0x%x", i, wr_buf[i], UXN1330_tb.fx3.rdwr_data_buf[i]);
             end
          end
 
@@ -152,37 +154,37 @@ module isim_tests;
          addr = 100;
          for(i=0; i<BUF_LEN; i=i+1) begin
             wr_buf[i] = 8'hAA;
-            UXN1330_tb.fx2.rdwr_data_buf[i] = wr_buf[i];
+            UXN1330_tb.fx3.rdwr_data_buf[i] = wr_buf[i];
          end
          
          $display("Writing %d 8'hAA bytes to address 0x%x in DRAM", BUF_LEN, addr);
-         UXN1330_tb.fx2.write(`TERM_DRAM, addr, BUF_LEN);
+         UXN1330_tb.fx3.write(`TERM_DRAM, addr, BUF_LEN);
 
          for(i=0; i<BUF_LEN; i=i+1) begin
             wr_buf[i] = 8'h55;
-            UXN1330_tb.fx2.rdwr_data_buf[i] = wr_buf[i];
+            UXN1330_tb.fx3.rdwr_data_buf[i] = wr_buf[i];
          end
 
-         UXN1330_tb.fx2.write(`TERM_DRAM, addr-offset, offset);
+         UXN1330_tb.fx3.write(`TERM_DRAM, addr-offset, offset);
          
          for(i=0; i<BUF_LEN; i=i+1) begin
-            UXN1330_tb.fx2.rdwr_data_buf[i] = 8'hXX;
+            UXN1330_tb.fx3.rdwr_data_buf[i] = 8'hXX;
          end
          
          $display("Reading %d bytes from address 0x%x in DRAM", BUF_LEN, addr-offset);
-         UXN1330_tb.fx2.read(`TERM_DRAM,  addr-offset, BUF_LEN+offset);
+         UXN1330_tb.fx3.read(`TERM_DRAM,  addr-offset, BUF_LEN+offset);
          
          results = 1;
          for(i=0; i<offset; i=i+1) begin
-            if(UXN1330_tb.fx2.rdwr_data_buf[i] !== 8'h55) begin
+            if(UXN1330_tb.fx3.rdwr_data_buf[i] !== 8'h55) begin
                results = 0;
-               $display(" write/read error at position %d: wrote 0x55  read:0x%x", i, UXN1330_tb.fx2.rdwr_data_buf[i]);
+               $display(" write/read error at position %d: wrote 0x55  read:0x%x", i, UXN1330_tb.fx3.rdwr_data_buf[i]);
             end
          end
          for(i=offset; i<BUF_LEN+offset; i=i+1) begin
-            if(UXN1330_tb.fx2.rdwr_data_buf[i] !== 8'hAA) begin
+            if(UXN1330_tb.fx3.rdwr_data_buf[i] !== 8'hAA) begin
                results = 0;
-               $display(" write/read error at position %d: wrote 0xAA  read:0x%x", i, UXN1330_tb.fx2.rdwr_data_buf[i]);
+               $display(" write/read error at position %d: wrote 0xAA  read:0x%x", i, UXN1330_tb.fx3.rdwr_data_buf[i]);
             end
          end
          if(results) begin

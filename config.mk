@@ -38,10 +38,12 @@ VERILATOR_FILES=
 ISE_SIM_ARGS = isim_tests -L unisims_ver -L secureip
 ISE_SIM_FILES = sim/isim_tests.v
 
+VSIM_TOP_MODULE = isim_tests
+VSIM_SIM_FILES = sim/isim_tests.v
+
 # SIM_DEFS specifies and `defines you want to set from the command
 # line
 SIM_DEFS= x512Mb sg25 x16
-#SIM_DEFS+= TRACE
 
 # SIM_LIBS specifies the directories for any verilog libraries whose
 # files you want to auto include.  This should not be confused with
@@ -49,7 +51,7 @@ SIM_DEFS= x512Mb sg25 x16
 # that are not excility listed in the SIM_FILES or SYN_FILES list
 # whereas INC_PATHS are searched for files that are `included in the
 # verilog itself.
-SIM_LIBS= 
+SIM_LIBS=unisims_ver secureip 
 
 # SYN_FILES lists the files that will be synthesized
 SYN_FILES = \
