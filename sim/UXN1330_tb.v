@@ -108,7 +108,7 @@ module UXN1330_tb
       .button                           (button),
       .led_b                            (led_b),
       .header                           (header),
-      
+`ifndef DISABLE_SDRAM   
       .sdram_addr                       (sdram_addr),
       .sdram_ba                         (sdram_ba),
       .sdram_cas_n                      (sdram_cas_n),
@@ -127,6 +127,7 @@ module UXN1330_tb
       .sdram_dq                         (sdram_dq),
       .sdram_rzq                        (sdram_rzq),
       .sdram_zio                        (sdram_zio),
+`endif
 
       .l10n                             (l10n),
       .l10p                             (l10p),
@@ -250,6 +251,7 @@ module UXN1330_tb
       );
 
 `ifndef verilator
+`ifndef DISABLE_SDRAM
    pulldown rzq_pulldown(sdram_rzq);
 
    ddr2_model_c3 u_mem_c3
@@ -270,6 +272,7 @@ module UXN1330_tb
       .rdqs_n     (),
       .odt        (sdram_odt)
       );
+`endif
 `endif
    
    UXN1330DaughterBoard UXN1330DaughterBoard

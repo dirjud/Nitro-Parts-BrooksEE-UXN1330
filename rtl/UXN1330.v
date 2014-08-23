@@ -660,13 +660,14 @@ module UXN1330
         .c3_p3_rd_overflow                      (p3_rd_overflow),
         .c3_p3_rd_error                         (p3_rd_error)
 	);
-   
 
    wire [15:0] dram_transfer_status;
    wire [31:0] dram_reg_datao;
    wire        dram_read_rdy, dram_write_rdy;
+`endif 
    
    always @(*) begin
+`ifndef DISABLE_SDRAM
       if(di_term_addr == `TERM_DRAM) begin
          di_reg_datao = dram_reg_datao;
          di_read_rdy  = dram_read_rdy;
@@ -677,7 +678,9 @@ module UXN1330
          di_read_rdy  = 1;
          di_write_rdy = 1;
          di_transfer_status = 0;
-      end else if(di_term_addr == `TERM_DUMMY_FPGA) begin
+      end else
+`endif      
+     if(di_term_addr == `TERM_DUMMY_FPGA) begin
 	 di_reg_datao = (di_reg_addr[0]) ? 32'hBBAA9988 : ~32'hBBAA9988;
 	 di_read_rdy  = 1;
 	 di_write_rdy = 1;
@@ -690,6 +693,7 @@ module UXN1330
       end
    end
    
+`ifndef DISABLE_SDRAM
    wire term_dram       = (di_term_addr == `TERM_DRAM);
    wire dram_write      = term_dram && di_write;
    wire dram_write_mode = term_dram && di_write_mode;
