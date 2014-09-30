@@ -250,22 +250,42 @@ module UXN1330
    assign fx3_fd    = (fx3_fd_oe) ? fx3_fd_out : 32'bZZZZ;
    assign fx3_fd_in = fx3_fd;
 
+`ifdef MULTI_HOST
+   wire [15:0] 	di_term_addr0      , di_term_addr1      ;
+   wire [31:0] 	di_reg_addr0       , di_reg_addr1       ;
+   wire [31:0] 	di_len0            , di_len1            ;
+   wire 	di_read_mode0      , di_read_mode1      ;
+   wire 	di_read_req0       , di_read_req1       ;
+   wire 	di_read0           , di_read1           ;
+   wire 	di_read_rdy0       , di_read_rdy1       ;
+   wire [31:0] 	di_reg_datao0      , di_reg_datao1      ;
+   wire 	di_write0          , di_write1          ;
+   wire 	di_write_rdy0      , di_write_rdy1      ;
+   wire 	di_write_mode0     , di_write_mode1     ;
+   wire [31:0] 	di_reg_datai0      , di_reg_datai1      ;
+   wire [15:0] 	di_transfer_status0, di_transfer_status1;
+`endif
+	
    Fx3HostInterface Fx3HostInterface
      (
       .ifclk(ifclk),
       .resetb(resetb),
 
-      .fx3_hics_b(fx3_hics_b),
-      .fx3_dma_rdy_b(fx3_dma_rdy_b),
-      .fx3_sloe_b(fx3_sloe_b),
-      .fx3_slrd_b(fx3_slrd_b),
-      .fx3_slwr_b(fx3_slwr_b), 
-      .fx3_pktend_b(fx3_pktend_b),
-      .fx3_fifo_addr(fx3_fifo_addr),
-      .fx3_fd_out(fx3_fd_out),
-      .fx3_fd_in(fx3_fd_in),
-      .fx3_fd_oe(fx3_fd_oe),
-
+`ifdef MULTI_HOST
+      .di_term_addr (di_term_addr0 ),
+      .di_reg_addr  (di_reg_addr0  ),
+      .di_len       (di_len0       ),
+      .di_read_mode (di_read_mode0 ),
+      .di_read_req  (di_read_req0  ),
+      .di_read      (di_read0      ),
+      .di_read_rdy  (di_read_rdy0  ),
+      .di_reg_datao (di_reg_datao0 ),
+      .di_write     (di_write0     ),
+      .di_write_rdy (di_write_rdy0 ),
+      .di_write_mode(di_write_mode0),
+      .di_reg_datai (di_reg_datai0 ),
+      .di_transfer_status(di_transfer_status0),
+`else
       .di_term_addr (di_term_addr ),
       .di_reg_addr  (di_reg_addr  ),
       .di_len       (di_len       ),
@@ -278,9 +298,58 @@ module UXN1330
       .di_write_rdy (di_write_rdy ),
       .di_write_mode(di_write_mode),
       .di_reg_datai (di_reg_datai ),
-      .di_transfer_status(di_transfer_status)
+      .di_transfer_status(di_transfer_status),
+`endif      
+
+      .fx3_hics_b(fx3_hics_b),
+      .fx3_dma_rdy_b(fx3_dma_rdy_b),
+      .fx3_sloe_b(fx3_sloe_b),
+      .fx3_slrd_b(fx3_slrd_b),
+      .fx3_slwr_b(fx3_slwr_b), 
+      .fx3_pktend_b(fx3_pktend_b),
+      .fx3_fifo_addr(fx3_fifo_addr),
+      .fx3_fd_out(fx3_fd_out),
+      .fx3_fd_in(fx3_fd_in),
+      .fx3_fd_oe(fx3_fd_oe)
+
       );
- 
+
+`ifdef MULTI_HOST
+   hi_arbitor #(.NUM_HOSTS(2))
+   hi_arbitor
+     (
+      .ifclk(resetb),
+      .resetb(resetb),
+      .I_di_term_addr ('{ di_term_addr1  , di_term_addr0  }),
+      .I_di_reg_addr  ('{ di_reg_addr1   , di_reg_addr0   }),
+      .I_di_len       ('{ di_len1        , di_len0        }),
+      .I_di_read_mode ('{ di_read_mode1  , di_read_mode0  }),
+      .I_di_read_req  ('{ di_read_req1   , di_read_req0   }),
+      .I_di_read      ('{ di_read1       , di_read0       }),
+      .I_di_write     ('{ di_write1      , di_write0      }),
+      .I_di_write_mode('{ di_write_mode1 , di_write_mode0 }),
+      .I_di_reg_datai ('{ di_reg_datai1  , di_reg_datai0  }),
+      .O_di_read_rdy       ('{di_read_rdy1       , di_read_rdy0         }),
+      .O_di_write_rdy      ('{di_write_rdy1      , di_write_rdy0        }),
+      .O_di_reg_datao      ('{di_reg_datao1      , di_reg_datao0        }),
+      .O_di_transfer_status('{di_transfer_status1, di_transfer_status0  }),
+      .di_term_addr,
+      .di_reg_addr,
+      .di_len,
+      .di_read_mode,
+      .di_read_req,
+      .di_read,
+      .di_write,
+      .di_write_mode,
+      .di_reg_datai,
+      .di_read_rdy,
+      .di_write_rdy,
+      .di_reg_datao,
+      .di_transfer_status
+   );
+`endif
+
+   
    ProjectTop ProjectTop
      (
       .resetb                           (resetb),
@@ -425,6 +494,22 @@ module UXN1330
       .n74n                             (n74n),
       .n74p                             (n74p),
 
+`ifdef MULTI_HOST
+      .di_term_addr1                    (di_term_addr1),
+      .di_reg_addr1                     (di_reg_addr1),
+      .di_len1                          (di_len1),
+      .di_read_mode1                    (di_read_mode1),
+      .di_read_req1                     (di_read_req1),
+      .di_read1                         (di_read1),
+      .di_write_mode1                   (di_write_mode1),
+      .di_write1                        (di_write1),
+      .di_reg_datai1                    (di_reg_datai1),
+      .di_read_rdy1                     (di_read_rdy1),
+      .di_reg_datao1                    (di_reg_datao1),
+      .di_write_rdy1                    (di_write_rdy1),
+      .di_transfer_status1              (di_transfer_status1),
+`endif      
+      
       .p1_clk                           (p1_clk),
       .p1_cmd_en                        (p1_cmd_en),
       .p1_cmd_instr                     (p1_cmd_instr[2:0]),
