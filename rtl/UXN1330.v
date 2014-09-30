@@ -331,7 +331,7 @@ module UXN1330
    hi_arbitor #(.NUM_HOSTS(2))
    hi_arbitor
      (
-      .ifclk(resetb),
+      .ifclk(ifclk),
       .resetb(resetb),
       .I_di_term_addr ('{ di_term_addr1  , di_term_addr0  }),
       .I_di_reg_addr  ('{ di_reg_addr1   , di_reg_addr0   }),
