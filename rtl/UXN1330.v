@@ -264,6 +264,7 @@ module UXN1330
    wire 	di_write_mode0     , di_write_mode1     ;
    wire [31:0] 	di_reg_datai0      , di_reg_datai1      ;
    wire [15:0] 	di_transfer_status0, di_transfer_status1;
+   wire         lock_arbiter1;
 `endif
 	
    Fx3HostInterface Fx3HostInterface
@@ -315,50 +316,51 @@ module UXN1330
       );
 
 `ifdef MULTI_HOST
-   wire 	O_di_read_rdy[0:1];
-   wire 	O_di_write_rdy[0:1];
-   wire [31:0] 	O_di_reg_datao[0:1];
-   wire [15:0] 	O_di_transfer_status[0:1];
-   assign di_read_rdy0        = O_di_read_rdy[0];
-   assign di_write_rdy0       = O_di_write_rdy[0];
-   assign di_reg_datao0       = O_di_reg_datao[0];
-   assign di_transfer_status0 = O_di_transfer_status[0];
-   assign di_read_rdy1        = O_di_read_rdy[1];
-   assign di_write_rdy1       = O_di_write_rdy[1];
-   assign di_reg_datao1       = O_di_reg_datao[1];
-   assign di_transfer_status1 = O_di_transfer_status[1];
-   
-   hi_arbitor #(.NUM_HOSTS(2))
-   hi_arbitor
+//   wire 	O_di_read_rdy[0:1];
+//   wire 	O_di_write_rdy[0:1];
+//   wire [31:0] 	O_di_reg_datao[0:1];
+//   wire [15:0] 	O_di_transfer_status[0:1];
+//   assign di_read_rdy0        = O_di_read_rdy[0];
+//   assign di_write_rdy0       = O_di_write_rdy[0];
+//   assign di_reg_datao0       = O_di_reg_datao[0];
+//   assign di_transfer_status0 = O_di_transfer_status[0];
+//   assign di_read_rdy1        = O_di_read_rdy[1];
+//   assign di_write_rdy1       = O_di_write_rdy[1];
+//   assign di_reg_datao1       = O_di_reg_datao[1];
+//   assign di_transfer_status1 = O_di_transfer_status[1];
+
+   hi_arbiter #(.NUM_HOSTS(2))
+   hi_arbiter
      (
       .ifclk(ifclk),
       .resetb(resetb),
-      .I_di_term_addr ('{ di_term_addr1  , di_term_addr0  }),
-      .I_di_reg_addr  ('{ di_reg_addr1   , di_reg_addr0   }),
-      .I_di_len       ('{ di_len1        , di_len0        }),
-      .I_di_read_mode ('{ di_read_mode1  , di_read_mode0  }),
-      .I_di_read_req  ('{ di_read_req1   , di_read_req0   }),
-      .I_di_read      ('{ di_read1       , di_read0       }),
-      .I_di_write     ('{ di_write1      , di_write0      }),
-      .I_di_write_mode('{ di_write_mode1 , di_write_mode0 }),
-      .I_di_reg_datai ('{ di_reg_datai1  , di_reg_datai0  }),
-      .O_di_read_rdy       (O_di_read_rdy       ),
-      .O_di_write_rdy      (O_di_write_rdy      ),
-      .O_di_reg_datao      (O_di_reg_datao      ),
-      .O_di_transfer_status(O_di_transfer_status),
-      .di_term_addr,
-      .di_reg_addr,
-      .di_len,
-      .di_read_mode,
-      .di_read_req,
-      .di_read,
-      .di_write,
-      .di_write_mode,
-      .di_reg_datai,
-      .di_read_rdy,
-      .di_write_rdy,
-      .di_reg_datao,
-      .di_transfer_status
+      .I_di_term_addr        ( { di_term_addr1      , di_term_addr0       } ),
+      .I_di_reg_addr         ( { di_reg_addr1       , di_reg_addr0        } ),
+      .I_di_len              ( { di_len1            , di_len0             } ),
+      .I_di_read_mode        ( { di_read_mode1      , di_read_mode0       } ),
+      .I_di_read_req         ( { di_read_req1       , di_read_req0        } ),
+      .I_di_read             ( { di_read1           , di_read0            } ),
+      .I_di_write            ( { di_write1          , di_write0           } ),
+      .I_di_write_mode       ( { di_write_mode1     , di_write_mode0      } ),
+      .I_di_reg_datai        ( { di_reg_datai1      , di_reg_datai0       } ),
+      .I_lock_arbiter        ( { lock_arbiter1      , 1'b0                } ),
+      .O_di_read_rdy         ( { di_read_rdy1       , di_read_rdy0        } ),
+      .O_di_write_rdy        ( { di_write_rdy1      , di_write_rdy0       } ),
+      .O_di_reg_datao        ( { di_reg_datao1      , di_reg_datao0       } ),
+      .O_di_transfer_status  ( { di_transfer_status1, di_transfer_status0 } ),
+      .di_term_addr          (   di_term_addr       ),	 
+      .di_reg_addr	     (   di_reg_addr        ),	 
+      .di_len		     (   di_len             ),		 
+      .di_read_mode	     (   di_read_mode       ),	 
+      .di_read_req	     (   di_read_req        ),	 
+      .di_read		     (   di_read            ),		 
+      .di_write		     (   di_write           ),	 
+      .di_write_mode	     (   di_write_mode      ),	 
+      .di_reg_datai	     (   di_reg_datai       ),	 
+      .di_read_rdy	     (   di_read_rdy        ),	 
+      .di_write_rdy	     (   di_write_rdy       ),	 
+      .di_reg_datao	     (   di_reg_datao       ),	 
+      .di_transfer_status    (   di_transfer_status )
    );
 `endif
 
@@ -521,6 +523,7 @@ module UXN1330
       .di_reg_datao1                    (di_reg_datao1),
       .di_write_rdy1                    (di_write_rdy1),
       .di_transfer_status1              (di_transfer_status1),
+      .lock_arbiter1                    (lock_arbiter1),
 `endif      
       
       .p1_clk                           (p1_clk),
