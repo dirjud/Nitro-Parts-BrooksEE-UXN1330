@@ -312,7 +312,7 @@ module mig_38 #
       .mem_wdata                        (c3_p0_mem_wdata[31:0]),
       .mem_we                           (c3_p0_mem_we)
       );
-   always @(posedge c3_p0_cmd_clk) begin
+   always @(posedge c3_p0_cmd_clk or negedge c3_p0_cmd_clk) begin
       if(c3_p0_mem_we) begin
          memory[c3_p0_mem_addr[23:0]] = c3_p0_mem_wdata;
       end
@@ -351,7 +351,7 @@ module mig_38 #
       .mem_wdata                        (c3_p1_mem_wdata[31:0]),
       .mem_we                           (c3_p1_mem_we)
       );
-   always @(posedge c3_p1_cmd_clk) begin
+   always @(posedge c3_p1_cmd_clk or negedge c3_p1_cmd_clk) begin
       if(c3_p1_mem_we) begin
          memory[c3_p1_mem_addr[23:0]] = c3_p1_mem_wdata;
       end
@@ -390,7 +390,7 @@ module mig_38 #
       .mem_wdata                        (c3_p2_mem_wdata[31:0]),
       .mem_we                           (c3_p2_mem_we)
       );
-   always @(posedge c3_p2_cmd_clk) begin
+   always @(posedge c3_p2_cmd_clk or negedge c3_p2_cmd_clk) begin
       if(c3_p2_mem_we) begin
          memory[c3_p2_mem_addr[23:0]] = c3_p2_mem_wdata;
       end
@@ -429,7 +429,7 @@ module mig_38 #
       .mem_wdata                        (c3_p3_mem_wdata[31:0]),
       .mem_we                           (c3_p3_mem_we)
       );
-   always @(posedge c3_p3_cmd_clk) begin
+   always @(posedge c3_p3_cmd_clk or negedge c3_p3_cmd_clk) begin
       if(c3_p3_mem_we) begin
          memory[c3_p3_mem_addr[23:0]] = c3_p3_mem_wdata;
       end
@@ -1035,7 +1035,7 @@ module port_ctrl
    
    assign pX_cmd_empty = cmdfifo_waddr   == cmdfifo_raddr;
    assign pX_cmd_full  = cmdfifo_waddr+1 == cmdfifo_raddr;
-   always @(posedge pX_cmd_clk or posedge async_rst) begin
+   always @(posedge pX_cmd_clk or negedge pX_cmd_clk or posedge async_rst) begin
       if(async_rst) begin
          cmdfifo_waddr <= 0;
          cmdfifo_raddr <= 0;
@@ -1046,12 +1046,12 @@ module port_ctrl
          reading <= 0;
          mem_we <= 0;
       end else begin
-         if(pX_cmd_en) begin
+         if(pX_cmd_en && pX_cmd_clk) begin
             cmdfifo[cmdfifo_waddr] <= {pX_cmd_byte_addr,pX_cmd_bl,pX_cmd_instr};
             cmdfifo_waddr <= cmdfifo_waddr + 1;
          end
 
-         if(!pX_cmd_empty && !writing && !reading) begin
+         if(!pX_cmd_empty && !writing && !reading && pX_cmd_clk) begin
             cmdfifo_raddr <= cmdfifo_raddr + 1;
             mem_addr      <= cmd_byte_addr[29:2];
             if(cmd_instr == CMD_WRITE) begin
@@ -1077,7 +1077,7 @@ module port_ctrl
                wfifo_raddr <= wfifo_raddr + 1;
             end
 
-         end else if(reading) begin
+         end else if(reading && pX_cmd_clk) begin
             if(rfifo_waddr == stop_addr) begin
                reading   <= 0;
             end else begin
