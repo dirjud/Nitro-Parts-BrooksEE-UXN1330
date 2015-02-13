@@ -19,7 +19,7 @@ VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x108
+FIRMWARE_VERSION = 0x109
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
