@@ -280,6 +280,8 @@ module mig_38 #
    wire [31:0] c3_p3_mem_rdata1;
    wire [31:0] c3_p3_mem_wdata;
    wire        c3_p3_mem_we;
+   wire [3:0]  lock_req;
+   wire	       locked = |lock_req;
    
    port_ctrl p0_port_ctrl
      (.async_rst                        (!c3_sys_rst_i),
@@ -310,7 +312,9 @@ module mig_38 #
       .mem_rdata                        (c3_p0_mem_rdata[31:0]),
       .mem_rdata1                       (c3_p0_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p0_mem_wdata[31:0]),
-      .mem_we                           (c3_p0_mem_we)
+      .mem_we                           (c3_p0_mem_we),
+      .locked(locked),
+      .lock_req(lock_req[0])
       );
    always @(posedge c3_p0_cmd_clk or negedge c3_p0_cmd_clk) begin
       if(c3_p0_mem_we) begin
@@ -349,7 +353,10 @@ module mig_38 #
       .mem_rdata                        (c3_p1_mem_rdata[31:0]),
       .mem_rdata1                       (c3_p1_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p1_mem_wdata[31:0]),
-      .mem_we                           (c3_p1_mem_we)
+      .mem_we                           (c3_p1_mem_we),
+      .locked(locked),
+      .lock_req(lock_req[1])
+
       );
    always @(posedge c3_p1_cmd_clk or negedge c3_p1_cmd_clk) begin
       if(c3_p1_mem_we) begin
@@ -388,7 +395,9 @@ module mig_38 #
       .mem_rdata                        (c3_p2_mem_rdata[31:0]),
       .mem_rdata1                       (c3_p2_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p2_mem_wdata[31:0]),
-      .mem_we                           (c3_p2_mem_we)
+      .mem_we                           (c3_p2_mem_we),
+      .locked(locked),
+      .lock_req(lock_req[2])
       );
    always @(posedge c3_p2_cmd_clk or negedge c3_p2_cmd_clk) begin
       if(c3_p2_mem_we) begin
@@ -427,7 +436,9 @@ module mig_38 #
       .mem_rdata                        (c3_p3_mem_rdata[31:0]),
       .mem_rdata1                       (c3_p3_mem_rdata1[31:0]),
       .mem_wdata                        (c3_p3_mem_wdata[31:0]),
-      .mem_we                           (c3_p3_mem_we)
+      .mem_we                           (c3_p3_mem_we),
+      .locked(locked),
+      .lock_req(lock_req[3])
       );
    always @(posedge c3_p3_cmd_clk or negedge c3_p3_cmd_clk) begin
       if(c3_p3_mem_we) begin
@@ -1010,7 +1021,9 @@ module port_ctrl
    output mem_we,
    input  [31:0] mem_rdata,
    input  [31:0] mem_rdata1,
-   output [31:0] mem_wdata
+   output [31:0] mem_wdata,
+   input locked,
+   output reg lock_req
    );
    
    reg [31:0] wfifo [0:63];
@@ -1045,6 +1058,7 @@ module port_ctrl
          writing <= 0;
          reading <= 0;
          mem_we <= 0;
+	 lock_req <= 0;
       end else begin
          if(pX_cmd_en && pX_cmd_clk) begin
             cmdfifo[cmdfifo_waddr] <= {pX_cmd_byte_addr,pX_cmd_bl,pX_cmd_instr};
@@ -1071,16 +1085,20 @@ module port_ctrl
             if(wfifo_raddr == stop_addr) begin
                writing   <= 0;
                mem_we <= 0;
+	       lock_req <= 0;
             end else begin
+	       lock_req <= 1;
                mem_we <= 1;
                mem_wdata <= wfifo[wfifo_raddr];
                wfifo_raddr <= wfifo_raddr + 1;
             end
 
-         end else if(reading && pX_cmd_clk) begin
+         end else if(reading && pX_cmd_clk && (!locked || lock_req)) begin
             if(rfifo_waddr == stop_addr) begin
                reading   <= 0;
+	       lock_req <= 0;
             end else begin
+	       lock_req <= 1;
                rfifo[rfifo_waddr] <= mem_rdata;
                rfifo_waddr <= rfifo_waddr + 1;
                mem_addr    <= mem_addr + 1;
@@ -1088,7 +1106,7 @@ module port_ctrl
                //rfifo_waddr <= rfifo_waddr + 2;
                //mem_addr    <= mem_addr + 2;
             end
-         end
+	 end
       end
    end
 

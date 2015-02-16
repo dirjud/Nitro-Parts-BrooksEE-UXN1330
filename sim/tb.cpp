@@ -23,7 +23,7 @@ bool trace = false;
 VUXN1330_tb *tb = NULL;
 unsigned int main_time = 0;	// Current simulation time
 
-#define CLK_HALF_PERIOD 11
+#define CLK_HALF_PERIOD 10
 #define CHECK_INIT   if(tb == NULL) { PyErr_SetString(PyExc_Exception, "You have not initialized this sim yet.  Run init() function"); return NULL; }
 
 
