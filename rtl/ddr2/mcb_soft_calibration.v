@@ -53,7 +53,7 @@
 // \   \   \/     Version: %version
 //  \   \         Application: MIG
 //  /   /         Filename: mcb_soft_calibration.v
-// /___/   /\     Date Last Modified: $Date: 2011/05/27 15:50:40 $
+// /___/   /\     Date Last Modified: $Date: 2011/06/02 07:17:24 $
 // \   \  /  \    Date Created: Mon Feb 9 2009
 //  \___\/\___\
 //
@@ -97,6 +97,13 @@
 //       3.8:  05/24/10:  Added 200us Wait logic to control CKE_Train. The 200us Wait counter assumes UI_CLK freq not higher than 100 MHz.
 //       3.9   02/11/11:  Apply a different skkew for the P and N inputs for the differential LDQS and UDQS signals to provide more noise immunity.
 //       4.0   04/11/11:  Added sync FF for RZA_IN and ZIO_IN async inputs.
+//       4.1   03/08/12:  Fixed SELFREFRESH_MCB_REQ logic. It should not need depend on the SM STATE so that
+//                        MCB can come out of selfresh mode. SM requires refresh cycle to update the DQS value. 
+//       4.2   05/10/12:  All P/N terms of input and bidir memory pins are initialized with value of ZERO. TZQINIT_MAXCNT
+//                        are set to 8 for LPDDR,DDR and DDR2 interface .
+//                        Keep the UICMDEN in assertion state when SM is in RST_DELAY state so that MCB will not start doing
+//                        Premable detection until the second deassertion of MCB_SYSRST. 
+//                        
 // End Revision
 //**********************************************************************************
 
@@ -160,7 +167,6 @@ module mcb_soft_calibration # (
   input   wire            MCB_UODATAVALID,
   input   wire            MCB_UOCMDREADY,
   input   wire            MCB_UO_CAL_START,
-  
   output  wire            MCB_SYSRST,               //  drives the MCB's SYSRST pin - the main reset for MCB
   output  reg   [7:0]     Max_Value,
   output  reg            CKE_Train
@@ -307,6 +313,8 @@ localparam          DQS_NUMERATOR   = 3;
 localparam          DQS_DENOMINATOR = 8;
 localparam          INCDEC_THRESHOLD= 8'h03; // parameter for the threshold which triggers an inc/dec to occur.  2 for half, 4 for quarter, 3 for three eighths
 
+
+                                                         
 reg   [5:0]   P_Term       /* synthesis syn_preserve = 1 */;
 reg   [6:0]   N_Term       /* synthesis syn_preserve = 1 */;
 reg   [5:0]   P_Term_s     /* synthesis syn_preserve = 1 */;
@@ -390,6 +398,8 @@ reg [15:0]    WAIT_200us_COUNTER;
 reg [7:0]     WaitTimer;
 reg           WarmEnough;
 
+wire   pre_sysrst_minpulse_width_ok;
+reg [3:0] pre_sysrst_cnt;
 // move the default assignment here to make FORMALITY happy.
 assign START_BROADCAST = 1'b1;
 assign MCB_RECAL = 1'b0;
@@ -476,30 +486,16 @@ begin
 end
 endfunction
 
-
-generate
-if (C_SIMULATION == "FALSE") begin: init_sequence
-   always @ (posedge UI_CLK, posedge RST)
-   begin
+ always @ (posedge UI_CLK, posedge RST)
+  begin
    if (RST)
-       WAIT_200us_COUNTER <= 'b0;
+     WAIT_200us_COUNTER <= (C_SIMULATION == "TRUE") ? 16'h7FF0 : 16'h0;
    else 
       if (WAIT_200us_COUNTER[15])  // UI_CLK maximum is up to 100 MHz.
-           WAIT_200us_COUNTER <= WAIT_200us_COUNTER                        ;
+        WAIT_200us_COUNTER <= WAIT_200us_COUNTER                        ;
       else
-           WAIT_200us_COUNTER <= WAIT_200us_COUNTER + 1'b1;
-   end 
-end 
-else begin: init_sequence_skip
-// synthesis translate_off        
-   initial
-   begin
-      WAIT_200us_COUNTER = 16'hFFFF;
-      $display("The 200 us wait period required before CKE goes active has been skipped in Simulation\n");
-   end    
-// synthesis translate_on         
-end
-endgenerate
+        WAIT_200us_COUNTER <= WAIT_200us_COUNTER + 1'b1;
+  end 
     
     
 generate
@@ -515,6 +511,8 @@ else
    CKE_Train <= 1'b0;
   else if (WAIT_200us_COUNTER[15] && ~MCB_UODONECAL)
    CKE_Train <= 1'b1;
+  else
+   CKE_Train <= 1'b0;
   
 end
 end
@@ -523,7 +521,7 @@ endgenerate
 
 generate
 if( C_MEM_TYPE != "DDR2") begin : gen_cketrain_b
-always @ ( posedge UI_CLK)
+always @ (RST)
    CKE_Train <= 1'b0;
 end 
 endgenerate
@@ -532,7 +530,7 @@ endgenerate
 //PLL_LOCK and Reset signals
 //********************************************
 localparam  RST_CNT         = 10'h010;          //defines pulse-width for reset
-localparam  TZQINIT_MAXCNT  = C_MEM_TZQINIT_MAXCNT + RST_CNT;  
+localparam  TZQINIT_MAXCNT  = (C_MEM_TYPE == "DDR3") ? C_MEM_TZQINIT_MAXCNT + RST_CNT : 8 + RST_CNT;  
 assign rst_tmp    = (~PLL_LOCK_R2 && ~SELFREFRESH_MODE); //rst_tmp becomes 1 if you lose PLL lock (registered twice for metastblty) and the device is not in SUSPEND
 
 // Rst_contidtion1 is to make sure RESET will not happen again within TZQINIT_MAXCNT
@@ -598,6 +596,18 @@ end
 
 
 //********************************************
+// stretching the pre_sysrst to satisfy the minimum pusle width
+
+always @ (posedge UI_CLK )begin
+  if (STATE == START_DYN_CAL_PRE)
+     pre_sysrst_cnt <= pre_sysrst_cnt + 1;
+  else
+     pre_sysrst_cnt <= 4'b0;
+end
+
+assign pre_sysrst_minpulse_width_ok = pre_sysrst_cnt[3];
+
+//********************************************
 // SUSPEND Logic
 //********************************************
 
@@ -634,7 +644,8 @@ always @ ( posedge UI_CLK, posedge RST) begin
 always @ ( posedge UI_CLK) begin
   if (RST)
     SELFREFRESH_MCB_REQ <= 1'b0;
-  else if (PLL_LOCK_R2 && ~SELFREFRESH_REQ_R3 && STATE == START_DYN_CAL)// 
+  else if (PLL_LOCK_R2 && ~SELFREFRESH_REQ_R3 )// 
+
     SELFREFRESH_MCB_REQ <=  1'b0;
   else if (STATE == START_DYN_CAL && SELFREFRESH_REQ_R3)  
     SELFREFRESH_MCB_REQ <= 1'b1;
@@ -880,8 +891,11 @@ assign Inc_Flag = (TARGET_DQS_DELAY > DQS_DELAY);
           N_Term          <= 7'b0;
           Pre_SYSRST      <= 1'b1;        // keeps MCB in reset
           LastPass_DynCal <= `IN_TERM_PASS;
-          if (SKIP_IN_TERM_CAL)
-            STATE <= WRITE_CALIBRATE;
+          if (SKIP_IN_TERM_CAL) begin
+               STATE <= WAIT_FOR_START_BROADCAST;
+               P_Term <= 'b0;
+               N_Term <= 'b0;
+            end
           else if (IODRPCTRLR_RDY_BUSY_N)
             STATE  <= LOAD_RZQ_NTERM;
           else
@@ -993,7 +1007,7 @@ assign Inc_Flag = (TARGET_DQS_DELAY > DQS_DELAY);
           Pre_SYSRST    <= 1'b0;      //release SYSRST, but keep UICMDEN=1 and UIDONECAL=0. This is needed to do Broadcast through UI interface, while keeping the MCB in calibration mode
           Active_IODRP  <= MCB_PORT;
           if (START_BROADCAST && IODRPCTRLR_RDY_BUSY_N) begin
-            if (P_Term != P_Term_Prev) begin
+            if (P_Term != P_Term_Prev || SKIP_IN_TERM_CAL   ) begin
               STATE       <= BROADCAST_PTERM;
               P_Term_Prev <= P_Term;
             end
@@ -1255,14 +1269,14 @@ assign Inc_Flag = (TARGET_DQS_DELAY > DQS_DELAY);
           end
         end
         RST_DELAY:  begin     // 7'h26
-          MCB_UICMDEN             <= 1'b0;  // release control of UI/UO port
           if (Block_Reset) begin  // this ensures that more than 512 clock cycles occur since the last reset after MCB_WRITE_CALIBRATE ???
             STATE       <= RST_DELAY;
-          end
+          end			 
           else begin
             STATE <= START_DYN_CAL_PRE;
           end
         end
+       
 //****************************
 // DYNAMIC CALIBRATION PORTION
 //****************************
@@ -1273,7 +1287,7 @@ assign Inc_Flag = (TARGET_DQS_DELAY > DQS_DELAY);
           Pre_SYSRST      <= 1'b1;    // SYSRST pulse
           if (~CALMODE_EQ_CALIBRATION)      // if C_MC_CALIBRATION_MODE is set to NOCALIBRATION
             STATE       <= START_DYN_CAL;  // we'll skip setting the DQS delays manually
-          else
+          else if (pre_sysrst_minpulse_width_ok)   
             STATE       <= WAIT_FOR_UODONE;
           end
         WAIT_FOR_UODONE:  begin  //7'h28
@@ -1529,5 +1543,4 @@ assign Inc_Flag = (TARGET_DQS_DELAY > DQS_DELAY);
     end
   end
 
-endmodule
-`endif
+endmodule`endif

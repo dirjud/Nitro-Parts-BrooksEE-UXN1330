@@ -48,7 +48,7 @@ module isim_tests;
 
 `ifdef TRACE      
       $dumpfile ( "isim.vcd" );
-      $dumpvars ( 4, UXN1330_tb );
+      $dumpvars ( 3, UXN1330_tb );
       $display( "Running Simulation" );
 `endif
 

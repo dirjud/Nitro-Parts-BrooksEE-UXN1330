@@ -62,14 +62,14 @@ NET "button"           LOC="P3"  | IOSTANDARD=LVCMOS18 | DRIVE=2 | PULLUP;
 # TIMESPEC "TS_MEMC3_CAL_TO_SYS2X_180" = FROM "MEMC3_CALIB_CLK" TO "MEMC3_SYSCLK_2X_180"  TIG;
 # TIMESPEC "TS_MEMC3_CAL_TO_IFCLK" = FROM "MEMC3_CALIB_CLK" TO "ifClk"  TIG;
 
-NET "mig_38/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
-NET "mig_38/c?_pll_lock" TIG;
-INST "mig_38/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+NET "mig_39/c?_pll_lock" TIG;
+INST "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
 
 #Please uncomment the below TIG if used in a design which enables self-refresh mode
 #NET "memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
      
-NET "mig_38/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ##This path exists for DDR2 only
+NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ##This path exists for DDR2 only
 #NET "memc3_infrastructure_inst/sys_clk_ibufg" TNM_NET = "SYS_CLK3";
 #TIMESPEC "TS_SYS_CLK3" = PERIOD "SYS_CLK3"  3.2  ns HIGH 50 %;
 

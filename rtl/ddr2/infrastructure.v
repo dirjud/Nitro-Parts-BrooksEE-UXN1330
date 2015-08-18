@@ -53,7 +53,7 @@
 // \   \   \/     Version            : %version
 //  \   \         Application        : MIG
 //  /   /         Filename           : infrastructure.v
-// /___/   /\     Date Last Modified : $Date: 2011/05/27 15:50:38 $
+// /___/   /\     Date Last Modified : $Date: 2011/06/02 07:17:09 $
 // \   \  /  \    Date Created       : Mon Mar 2 2009
 //  \___\/\___\
 //
@@ -130,38 +130,38 @@ module infrastructure #
   assign clk0        = clk0_bufg;
   assign pll_lock    = bufpll_mcb_locked;
 
-//  generate
-//    if (C_INPUT_CLK_TYPE == "DIFFERENTIAL") begin: diff_input_clk
-//
-//      //***********************************************************************
-//      // Differential input clock input buffers
-//      //***********************************************************************
-//
-//      IBUFGDS #
-//        (
-//         .DIFF_TERM    ("TRUE")
-//         )
-//        u_ibufg_sys_clk
-//          (
-//           .I  (sys_clk_p),
-//           .IB (sys_clk_n),
-//           .O  (sys_clk_ibufg)
-//           );
-//
-//    end else if (C_INPUT_CLK_TYPE == "SINGLE_ENDED") begin: se_input_clk
-//
-//      //***********************************************************************
-//      // SINGLE_ENDED input clock input buffers
-//      //***********************************************************************
-//
-//      IBUFG  u_ibufg_sys_clk
-//          (
-//           .I  (sys_clk),
-//           .O  (sys_clk_ibufg)
-//           );
-//   end
-//  endgenerate
-   assign sys_clk_ibufg=sys_clk;
+  //generate
+  //  if (C_INPUT_CLK_TYPE == "DIFFERENTIAL") begin: diff_input_clk
+
+  //    //***********************************************************************
+  //    // Differential input clock input buffers
+  //    //***********************************************************************
+
+  //    IBUFGDS #
+  //      (
+  //       .DIFF_TERM    ("TRUE")
+  //       )
+  //      u_ibufg_sys_clk
+  //        (
+  //         .I  (sys_clk_p),
+  //         .IB (sys_clk_n),
+  //         .O  (sys_clk_ibufg)
+  //         );
+
+  //  end else if (C_INPUT_CLK_TYPE == "SINGLE_ENDED") begin: se_input_clk
+
+  //    //***********************************************************************
+  //    // SINGLE_ENDED input clock input buffers
+  //    //***********************************************************************
+
+  //    IBUFG  u_ibufg_sys_clk
+  //        (
+  //         .I  (sys_clk),
+  //         .O  (sys_clk_ibufg)
+  //         );
+  // end
+  //endgenerate
+  assign sys_clk_ibufg = sys_clk;
 
   //***************************************************************************
   // Global clock generation and distribution
@@ -170,12 +170,12 @@ module infrastructure #
     PLL_ADV #
         (
          .BANDWIDTH          ("OPTIMIZED"),
-         .CLKIN1_PERIOD      (10.0), //(CLK_PERIOD_NS),
-         .CLKIN2_PERIOD      (1),      //(CLK_PERIOD_NS),
-         .CLKOUT0_DIVIDE     (1),  // (C_CLKOUT0_DIVIDE),
-         .CLKOUT1_DIVIDE     (1),  // (C_CLKOUT1_DIVIDE),
-         .CLKOUT2_DIVIDE     (16), // (C_CLKOUT2_DIVIDE),
-         .CLKOUT3_DIVIDE     (8),  // (C_CLKOUT3_DIVIDE),
+         .CLKIN1_PERIOD      (CLK_PERIOD_NS),
+         .CLKIN2_PERIOD      (CLK_PERIOD_NS),
+         .CLKOUT0_DIVIDE     (C_CLKOUT0_DIVIDE),
+         .CLKOUT1_DIVIDE     (C_CLKOUT1_DIVIDE),
+         .CLKOUT2_DIVIDE     (C_CLKOUT2_DIVIDE),
+         .CLKOUT3_DIVIDE     (C_CLKOUT3_DIVIDE),
          .CLKOUT4_DIVIDE     (1),
          .CLKOUT5_DIVIDE     (1),
          .CLKOUT0_PHASE      (0.000),
@@ -192,8 +192,8 @@ module infrastructure #
          .CLKOUT5_DUTY_CYCLE (0.500),
          .SIM_DEVICE         ("SPARTAN6"),
          .COMPENSATION       ("INTERNAL"),
-         .DIVCLK_DIVIDE      (1), //(C_DIVCLK_DIVIDE),
-         .CLKFBOUT_MULT      (6), // (C_CLKFBOUT_MULT),
+         .DIVCLK_DIVIDE      (C_DIVCLK_DIVIDE),
+         .CLKFBOUT_MULT      (C_CLKFBOUT_MULT),
          .CLKFBOUT_PHASE     (0.0),
          .REF_JITTER         (0.005000)
          )
@@ -237,10 +237,11 @@ module infrastructure #
      .I (clk0_bufg_in)
      );
 
-   BUFG U_BUFG_CLK1
+   BUFGCE U_BUFG_CLK1
     (
      .O (mcb_drp_clk),
-     .I (mcb_drp_clk_bufg_in)
+     .I (mcb_drp_clk_bufg_in),
+     .CE (locked)
      );
 
   always @(posedge mcb_drp_clk , posedge sys_rst)

@@ -2,7 +2,7 @@
 /****************************************************************************************
 *
 *    File Name:  ddr2_model.v
-*      Version:  5.80
+*      Version:  5.82
 *        Model:  BUS Functional
 *
 * Dependencies:  ddr2_model_parameters.vh
@@ -114,6 +114,10 @@
 * 5.70  JMK      04/23/09    Updated tRPA definition
 *                            Increased internal width to 72 bit DQ bus
 * 5.80  SPH      08/12/09    Fixed tRAS maximum violation (only check if bank still open)
+* 5.81  SPH      12/08/09    Only check tIH for cmd_addr if CS# LOW
+* 5.82  SPH      04/08/10    Correct debug message for SRT in EMR2         
+* 5.81  SPH      12/08/09    Only check tIH for cmd_addr if CS# LOW
+* 5.81  SPH      12/08/09    Only check tIH for cmd_addr if CS# LOW
 ****************************************************************************************/
 
 // DO NOT CHANGE THE TIMESCALE
@@ -561,8 +565,8 @@ module ddr2_model_c3 (
             // reset bank state
             active_bank          = {`BANKS{1'b1}};
             auto_precharge_bank  = 0;
-                read_precharge_bank  = 0;
-                write_precharge_bank = 0;
+	        read_precharge_bank  = 0;
+	        write_precharge_bank = 0;
             // require initialization sequence
             init_done            = 0;
             init_step            = 0;
@@ -839,9 +843,9 @@ module ddr2_model_c3 (
                                 2 : begin
                                     // High Temperature Self Refresh rate
                                     if (!addr[7]) begin
-                                        if (DEBUG) $display ("%m: at time %t INFO: %s %d High Temperature Self Refresh rate = Disabled", $time, cmd_string[cmd], bank);
-                                    end else if (addr[1]) begin
-                                        if (DEBUG) $display ("%m: at time %t INFO: %s %d High Temperature Self Refresh rate = Enabled", $time, cmd_string[cmd], bank);
+                                        if (DEBUG) $display ("%m: at time %t INFO: %s %d High Temperature Self Refresh rate = 1X (0C-85C)", $time, cmd_string[cmd], bank);
+                                    end else if (addr[7]) begin
+                                        if (DEBUG) $display ("%m: at time %t INFO: %s %d High Temperature Self Refresh rate = 2X (>85C)", $time, cmd_string[cmd], bank);
                                     end else begin
                                         $display ("%m: at time %t ERROR: %s %d Illegal High Temperature Self Refresh rate = %d", $time, cmd_string[cmd], bank, addr[7]);
                                     end
@@ -1707,7 +1711,9 @@ module ddr2_model_c3 (
     reg [4:0] i;
     begin
         if (prev_cke) begin
-            if ($time - tm_ck_pos < TIH) 
+            if ((i == 0) && ($time - tm_ck_pos < TIH))                      // Always check tIH for CS#
+                $display ("%m: at time %t ERROR:  tIH violation on %s by %t", $time, cmd_addr_string[i], tm_ck_pos + TIH - $time);
+            if ((i > 0) && (cs_n_in == 1'b0) && ($time - tm_ck_pos < TIH))  // Only check tIH for cmd_addr if CS# low
                 $display ("%m: at time %t ERROR:  tIH violation on %s by %t", $time, cmd_addr_string[i], tm_ck_pos + TIH - $time);
             if (dll_locked && ($time - tm_cmd_addr[i] < $rtoi(TIPW*tck_avg)))
                 $display ("%m: at time %t ERROR: tIPW violation on %s by %t", $time, cmd_addr_string[i], tm_cmd_addr[i] + TIPW*tck_avg - $time);

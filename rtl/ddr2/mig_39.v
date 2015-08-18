@@ -49,10 +49,10 @@
 //   ____  ____
 //  /   /\/   /
 // /___/  \  /    Vendor             : Xilinx
-// \   \   \/     Version            : 3.8
+// \   \   \/     Version            : 3.92
 //  \   \         Application        : MIG
-//  /   /         Filename           : mig_38 #.v
-// /___/   /\     Date Last Modified : $Date: 2011/05/27 15:50:38 $
+//  /   /         Filename           : mig_39 #.v
+// /___/   /\     Date Last Modified : $Date: 2011/06/02 07:17:09 $
 // \   \  /  \    Date Created       : Tue Feb 23 2010
 //  \___\/\___\
 //
@@ -66,8 +66,8 @@
 //*****************************************************************************
 `timescale 1ns/1ps
 
-(* X_CORE_INFO = "mig_v3_8_ddr2_ddr2_s6, Coregen 13.2" , CORE_GENERATION_INFO = "ddr2_ddr2_s6,mig_v3_8,{component_name=mig_38, C3_MEM_INTERFACE_TYPE=DDR2_SDRAM, C3_CLK_PERIOD=3200, C3_MEMORY_PART=mt47h32m16xx-25e-it, C3_MEMORY_DEVICE_WIDTH=16, C3_OUTPUT_DRV=FULL, C3_RTT_NOM=50OHMS, C3_DQS#_ENABLE=YES, C3_HIGH_TEMP_SR=NORMAL, C3_PORT_CONFIG=Four 32-bit bi-directional ports, C3_MEM_ADDR_ORDER=ROW_BANK_COLUMN, C3_PORT_ENABLE=Port0_Port1_Port2_Port3, C3_CLASS_ADDR=II, C3_CLASS_DATA=II, C3_INPUT_PIN_TERMINATION=CALIB_TERM, C3_DATA_TERMINATION=25 Ohms, C3_CLKFBOUT_MULT_F=2, C3_CLKOUT_DIVIDE=1, C3_DEBUG_PORT=0, INPUT_CLK_TYPE=Single-Ended, LANGUAGE=Verilog, SYNTHESIS_TOOL=Foundation_ISE, NO_OF_CONTROLLERS=1}" *)
-module mig_38 #
+(* X_CORE_INFO = "mig_v3_92_ddr2_ddr2_s6, Coregen 14.7" , CORE_GENERATION_INFO = "ddr2_ddr2_s6,mig_v3_92,{component_name=mig_39, C3_MEM_INTERFACE_TYPE=DDR2_SDRAM, C3_CLK_PERIOD=3200, C3_MEMORY_PART=mt47h32m16xx-25e-it, C3_MEMORY_DEVICE_WIDTH=16, C3_OUTPUT_DRV=FULL, C3_RTT_NOM=50OHMS, C3_DQS#_ENABLE=YES, C3_HIGH_TEMP_SR=NORMAL, C3_PORT_CONFIG=Four 32-bit bi-directional ports, C3_MEM_ADDR_ORDER=ROW_BANK_COLUMN, C3_PORT_ENABLE=Port0_Port1_Port2_Port3, C3_CLASS_ADDR=II, C3_CLASS_DATA=II, C3_INPUT_PIN_TERMINATION=CALIB_TERM, C3_DATA_TERMINATION=25 Ohms, C3_CLKFBOUT_MULT_F=6, C3_CLKOUT_DIVIDE=1, C3_DEBUG_PORT=0, INPUT_CLK_TYPE=Single-Ended, LANGUAGE=Verilog, SYNTHESIS_TOOL=Foundation_ISE, NO_OF_CONTROLLERS=1}" *)
+module mig_39 #
 (
    parameter C3_P0_MASK_SIZE           = 4,
    parameter C3_P0_DATA_PORT_SIZE      = 32,
@@ -452,6 +452,7 @@ module mig_38 #
 `else   
 
 
+
 // The parameter CX_PORT_ENABLE shows all the active user ports in the design.
 // For example, the value 6'b111100 tells that only port-2, port-3, port-4
 // and port-5 are enabled. The other two ports are inactive. An inactive port
@@ -466,7 +467,7 @@ module mig_38 #
    localparam C3_CLKOUT1_DIVIDE       = 1;       
    localparam C3_CLKOUT2_DIVIDE       = 16;       
    localparam C3_CLKOUT3_DIVIDE       = 8;       
-   localparam C3_CLKFBOUT_MULT        = 2;       
+   localparam C3_CLKFBOUT_MULT        = 6;
    localparam C3_DIVCLK_DIVIDE        = 1;       
    localparam C3_ARB_ALGORITHM        = 0;       
    localparam C3_ARB_NUM_TIME_SLOTS   = 12;       
@@ -533,7 +534,9 @@ module mig_38 #
    localparam C3_DQ14_TAP_DELAY_VAL   = 0;       
    localparam C3_DQ15_TAP_DELAY_VAL   = 0;       
    localparam C3_MCB_USE_EXTERNAL_BUFPLL  = 1;       
-   localparam C3_SMALL_DEVICE         = "FALSE";       
+   localparam C3_SMALL_DEVICE         = "FALSE";       // The parameter is set to TRUE for all packages of xc6slx9 device
+                                                       // as most of them cannot fit the complete example design when the
+                                                       // Chip scope modules are enabled
    localparam C3_INCLK_PERIOD         = ((C3_MEMCLK_PERIOD * C3_CLKFBOUT_MULT) / (C3_DIVCLK_DIVIDE * C3_CLKOUT0_DIVIDE * 2));       
    localparam DBG_WR_STS_WIDTH        = 32;
    localparam DBG_RD_STS_WIDTH        = 32;
@@ -980,11 +983,11 @@ assign  c3_sys_clk_n = 1'b0;
 
 
 
+
 `endif
 
 endmodule   
 
- 
 `ifdef verilator
 
 module port_ctrl

@@ -43,7 +43,7 @@ VSIM_SIM_FILES = sim/isim_tests.v
 
 # SIM_DEFS specifies and `defines you want to set from the command
 # line
-SIM_DEFS= x512Mb sg25 x16
+SIM_DEFS += 
 
 # SIM_LIBS specifies the directories for any verilog libraries whose
 # files you want to auto include.  This should not be confused with

@@ -18,7 +18,7 @@ endif
 VERILATOR_CPPFLAGS += -I$(abspath ../$(UXN1330_DIR)/sim)
 VERILATOR_CPP_FILE = ../$(UXN1330_DIR)/sim/tb.cpp ../$(UXN1330_DIR)/sim/vpycallbacks.cpp
 
-SIM_DEFS += IMAGER_CALLBACKS
+SIM_DEFS += x512Mb sg25E x16 IMAGER_CALLBACKS
 
 UXN1330_SYN_FILES = \
 	$(UXN1330_DIR)/rtl/UXN1330.v \
@@ -27,7 +27,7 @@ UXN1330_SYN_FILES = \
 
 ifeq (,$(findstring DISABLE_SDRAM, $(DEFS)))
 UXN1330_SYN_FILES += \
-	$(UXN1330_DIR)/rtl/ddr2/mig_38.v \
+	$(UXN1330_DIR)/rtl/ddr2/mig_39.v \
 	$(UXN1330_DIR)/rtl/ddr2/infrastructure.v \
 	$(UXN1330_DIR)/rtl/ddr2/memc_wrapper.v \
 	$(UXN1330_DIR)/rtl/ddr2/mcb_ui_top.v \

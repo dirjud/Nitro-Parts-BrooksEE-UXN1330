@@ -625,15 +625,46 @@ module UXN1330
    assign sdram_addr[14:13] = 0;
    assign sdram_ba[2] = 0;
 
-   mig_38 #
+   localparam C3_P0_MASK_SIZE=4;
+   localparam C3_P0_DATA_PORT_SIZE=32;
+   localparam C3_P1_MASK_SIZE=4;
+   localparam C3_P1_DATA_PORT_SIZE=32;
+   localparam C3_MEMCLK_PERIOD=3200;
+   localparam C3_RST_ACT_LOW=1;
+   localparam C3_INPUT_CLK_TYPE="SINGLE_ENDED";
+   localparam DEBUG_EN=1;
+   localparam C3_MEM_ADDR_ORDER="ROW_BANK_COLUMN";
+   localparam C3_NUM_DQ_PINS=16;
+   localparam C3_MEM_ADDR_WIDTH=13;  
+   localparam C3_MEM_BANKADDR_WIDTH=2;
+   localparam C3_SIMULATION="TRUE";
+   localparam C3_CALIB_SOFT_IP="TRUE";
+
+   mig_39 #
      (
-      .C3_MEMCLK_PERIOD(3200), // Memory data transfer clock period
-      .C3_SIMULATION("FALSE"), // # = TRUE, Simulating the design. Useful to reduce the simulation time,
+          .C3_P0_MASK_SIZE       (C3_P0_MASK_SIZE      ),
+          .C3_P0_DATA_PORT_SIZE  (C3_P0_DATA_PORT_SIZE ),
+          .C3_P1_MASK_SIZE       (C3_P1_MASK_SIZE      ),
+          .C3_P1_DATA_PORT_SIZE  (C3_P1_DATA_PORT_SIZE ),
+          .C3_INPUT_CLK_TYPE     (C3_INPUT_CLK_TYPE),
+          
+          
+          .DEBUG_EN              (DEBUG_EN),
+          
+          .C3_MEM_ADDR_ORDER     (C3_MEM_ADDR_ORDER    ),
+          .C3_NUM_DQ_PINS        (C3_NUM_DQ_PINS       ),
+          .C3_MEM_ADDR_WIDTH     (C3_MEM_ADDR_WIDTH    ),
+          .C3_MEM_BANKADDR_WIDTH (C3_MEM_BANKADDR_WIDTH),
+          
+          .C3_CALIB_SOFT_IP      (C3_CALIB_SOFT_IP ),
+      
+      .C3_MEMCLK_PERIOD(C3_MEMCLK_PERIOD), // Memory data transfer clock period
+      .C3_SIMULATION(C3_SIMULATION), // # = TRUE, Simulating the design. Useful to reduce the simulation time,
                                // # = FALSE, Implementing the design.
-      .C3_RST_ACT_LOW(1) // # = 1 for active low reset,
+      .C3_RST_ACT_LOW(C3_RST_ACT_LOW) // # = 1 for active low reset,
                           // # = 0 for active high reset.
       )
-     mig_38
+     mig_39
        (
         .mcb3_dram_dq                        (sdram_dq),
         .mcb3_dram_a                         (sdram_addr[12:0]),
