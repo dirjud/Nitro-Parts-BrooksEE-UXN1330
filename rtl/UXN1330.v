@@ -606,13 +606,42 @@ module UXN1330
    reg 	      status_rst;
    
    reg  status_calib_done;
+   initial status_calib_done <= 0; // for sim
    wire [31:0]  status_mcb = 0;
    wire         di_clk = ifclk;
    assign status_pll_locked = 1;
    assign status_selfrefresh_mode = 0;
    
    `include "DRAM_CTRLTerminalInstance.v"
-   
+
+   // NOTE When MIG generator generates the mig_39.v, you specify a 
+   // clock input PERIOD in PS and it then generates a multiplier
+   // and divider that it consideres the best options for the 
+   // dram.  It uses the PERIOD you specify in a whole bunch of
+   // calculations at the lower level for write timing etc.
+   // I tried to make all that transparent so all you need to 
+   // do is specify your clock frequency and the correct
+   // multiplier and divider to get to approximately 300mhz
+   // for the dram clock.  If you go below 250 or so mhz
+   // there are CAS latency settings that the mig generator
+   // will change that should probably also be updated.  This
+   // mig is not generated with those settings changed so you'd
+   // have to regenerate the mig with your desired output freqency
+   // then do a diff against this one to see if anything changed.
+   // Only thing I've seen is C3_MEM_CAS_LATENCY go from 5 to 4.
+
+   `ifndef UXN1330_MEMCLK_MULT
+      `define UXN1330_MEMCLK_MULT  6; 
+   `endif
+   `ifndef UXN1330_MEMCLK_DIV
+       `define UXN1330_MEMCLK_DIV  1;
+   `endif
+   `ifndef UXN1330_IFCLK_FREQ
+        `define UXN1330_IFCLK_FREQ 50.4;
+   `endif
+   // period in PS
+   `define UXN1330_MEMCLK_PERIOD  1000000/`UXN1330_IFCLK_FREQ * `UXN1330_MEMCLK_DIV / `UXN1330_MEMCLK_MULT
+
    wire         c3_clk0;
    wire         c3_rst0;
    wire         c3_async_rst;
@@ -629,7 +658,9 @@ module UXN1330
    localparam C3_P0_DATA_PORT_SIZE=32;
    localparam C3_P1_MASK_SIZE=4;
    localparam C3_P1_DATA_PORT_SIZE=32;
-   localparam C3_MEMCLK_PERIOD=3200;
+   localparam C3_MEMCLK_PERIOD=`UXN1330_MEMCLK_PERIOD;
+   localparam C3_MEMCLK_MULT=`UXN1330_MEMCLK_MULT;
+   localparam C3_MEMCLK_DIV=`UXN1330_MEMCLK_DIV;
    localparam C3_RST_ACT_LOW=1;
    localparam C3_INPUT_CLK_TYPE="SINGLE_ENDED";
    localparam DEBUG_EN=1;
@@ -637,7 +668,11 @@ module UXN1330
    localparam C3_NUM_DQ_PINS=16;
    localparam C3_MEM_ADDR_WIDTH=13;  
    localparam C3_MEM_BANKADDR_WIDTH=2;
+`ifdef SIM
    localparam C3_SIMULATION="TRUE";
+`else
+   localparam C3_SIMULATION="FALSE";
+`endif
    localparam C3_CALIB_SOFT_IP="TRUE";
 
    mig_39 #
@@ -659,6 +694,8 @@ module UXN1330
           .C3_CALIB_SOFT_IP      (C3_CALIB_SOFT_IP ),
       
       .C3_MEMCLK_PERIOD(C3_MEMCLK_PERIOD), // Memory data transfer clock period
+      .C3_MEMCLK_MULT(C3_MEMCLK_MULT),
+      .C3_MEMCLK_DIV(C3_MEMCLK_DIV),
       .C3_SIMULATION(C3_SIMULATION), // # = TRUE, Simulating the design. Useful to reduce the simulation time,
                                // # = FALSE, Implementing the design.
       .C3_RST_ACT_LOW(C3_RST_ACT_LOW) // # = 1 for active low reset,

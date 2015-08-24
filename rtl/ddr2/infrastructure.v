@@ -130,38 +130,41 @@ module infrastructure #
   assign clk0        = clk0_bufg;
   assign pll_lock    = bufpll_mcb_locked;
 
-  //generate
-  //  if (C_INPUT_CLK_TYPE == "DIFFERENTIAL") begin: diff_input_clk
+`ifdef UXN1330_HAS_NO_IOBUF_ON_SYSCLK 
+  generate
+    if (C_INPUT_CLK_TYPE == "DIFFERENTIAL") begin: diff_input_clk
 
-  //    //***********************************************************************
-  //    // Differential input clock input buffers
-  //    //***********************************************************************
+      //***********************************************************************
+      // Differential input clock input buffers
+      //***********************************************************************
 
-  //    IBUFGDS #
-  //      (
-  //       .DIFF_TERM    ("TRUE")
-  //       )
-  //      u_ibufg_sys_clk
-  //        (
-  //         .I  (sys_clk_p),
-  //         .IB (sys_clk_n),
-  //         .O  (sys_clk_ibufg)
-  //         );
+      IBUFGDS #
+        (
+         .DIFF_TERM    ("TRUE")
+         )
+        u_ibufg_sys_clk
+          (
+           .I  (sys_clk_p),
+           .IB (sys_clk_n),
+           .O  (sys_clk_ibufg)
+           );
 
-  //  end else if (C_INPUT_CLK_TYPE == "SINGLE_ENDED") begin: se_input_clk
+    end else if (C_INPUT_CLK_TYPE == "SINGLE_ENDED") begin: se_input_clk
 
-  //    //***********************************************************************
-  //    // SINGLE_ENDED input clock input buffers
-  //    //***********************************************************************
+      //***********************************************************************
+      // SINGLE_ENDED input clock input buffers
+      //***********************************************************************
 
-  //    IBUFG  u_ibufg_sys_clk
-  //        (
-  //         .I  (sys_clk),
-  //         .O  (sys_clk_ibufg)
-  //         );
-  // end
-  //endgenerate
+      IBUFG  u_ibufg_sys_clk
+          (
+           .I  (sys_clk),
+           .O  (sys_clk_ibufg)
+           );
+   end
+  endgenerate
+`else
   assign sys_clk_ibufg = sys_clk;
+`endif
 
   //***************************************************************************
   // Global clock generation and distribution

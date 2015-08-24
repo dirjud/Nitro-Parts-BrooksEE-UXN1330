@@ -76,8 +76,12 @@ module mig_39 #
    parameter DEBUG_EN                = 0,       
                                        // # = 1, Enable debug signals/controls,
                                        //   = 0, Disable debug signals/controls.
-   parameter C3_MEMCLK_PERIOD        = 3200,       
+   parameter C3_MEMCLK_PERIOD        = 3200,
                                        // Memory data transfer clock period
+   parameter C3_MEMCLK_MULT          = 6, // multiplier required to get 
+                                       // incoming clock to MEMCLK_PERIOD
+   parameter C3_MEMCLK_DIV           = 1, // divider required to get 
+                                       // incoming clock to MEMCLK_PERIOD
    parameter C3_CALIB_SOFT_IP        = "TRUE",       
                                        // # = TRUE, Enables the soft calibration logic,
                                        // # = FALSE, Disables the soft calibration logic.
@@ -467,7 +471,7 @@ module mig_39 #
    localparam C3_CLKOUT1_DIVIDE       = 1;       
    localparam C3_CLKOUT2_DIVIDE       = 16;       
    localparam C3_CLKOUT3_DIVIDE       = 8;       
-   localparam C3_CLKFBOUT_MULT        = 6;
+   localparam C3_CLKFBOUT_MULT        = 2;
    localparam C3_DIVCLK_DIVIDE        = 1;       
    localparam C3_ARB_ALGORITHM        = 0;       
    localparam C3_ARB_NUM_TIME_SLOTS   = 12;       
@@ -537,7 +541,7 @@ module mig_39 #
    localparam C3_SMALL_DEVICE         = "FALSE";       // The parameter is set to TRUE for all packages of xc6slx9 device
                                                        // as most of them cannot fit the complete example design when the
                                                        // Chip scope modules are enabled
-   localparam C3_INCLK_PERIOD         = ((C3_MEMCLK_PERIOD * C3_CLKFBOUT_MULT) / (C3_DIVCLK_DIVIDE * C3_CLKOUT0_DIVIDE * 2));       
+   localparam C3_INCLK_PERIOD         = ((C3_MEMCLK_PERIOD * C3_MEMCLK_MULT * C3_CLKFBOUT_MULT) / (C3_DIVCLK_DIVIDE * C3_CLKOUT0_DIVIDE * C3_MEMCLK_DIV * 2));       
    localparam DBG_WR_STS_WIDTH        = 32;
    localparam DBG_RD_STS_WIDTH        = 32;
    localparam C3_ARB_TIME0_SLOT  = {3'b000, 3'b000, C3_ARB_TIME_SLOT_0[11:9], C3_ARB_TIME_SLOT_0[8:6], C3_ARB_TIME_SLOT_0[5:3], C3_ARB_TIME_SLOT_0[2:0]};
@@ -641,8 +645,8 @@ assign  c3_sys_clk_n = 1'b0;
          .C_CLKOUT1_DIVIDE               (C3_CLKOUT1_DIVIDE),
          .C_CLKOUT2_DIVIDE               (C3_CLKOUT2_DIVIDE),
          .C_CLKOUT3_DIVIDE               (C3_CLKOUT3_DIVIDE),
-         .C_CLKFBOUT_MULT                (C3_CLKFBOUT_MULT),
-         .C_DIVCLK_DIVIDE                (C3_DIVCLK_DIVIDE)
+         .C_CLKFBOUT_MULT                (C3_CLKFBOUT_MULT*C3_MEMCLK_MULT),
+         .C_DIVCLK_DIVIDE                (C3_DIVCLK_DIVIDE*C3_MEMCLK_DIV)
       )
       memc3_infrastructure_inst
       (

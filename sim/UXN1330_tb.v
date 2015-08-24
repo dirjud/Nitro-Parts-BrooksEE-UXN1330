@@ -37,8 +37,9 @@ module UXN1330_tb
 `ifndef verilator
    reg   clk;
    initial clk=0;
-   //always #10417 clk = !clk; // # 48MHz clock
-   always #9921 clk = !clk; // 50.4Hmz clk
+   //always #10417 clk = !clk; // # 48 MHz clock
+   //always #9921 clk = !clk; // 50.4 mHz clk
+   always #6200 clk = !clk; // 80.64 mhz
 `endif
 
    wire [31:0] fx3_fd;
