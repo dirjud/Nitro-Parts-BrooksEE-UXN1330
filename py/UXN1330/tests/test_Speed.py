@@ -1,7 +1,6 @@
 
 from basetest import DevTestCase 
 
-from videoviewer import api
 from time import time
 
 class TestSpeed(DevTestCase):
@@ -32,6 +31,7 @@ class TestSpeed(DevTestCase):
             target_min = 35
 
         self.assertGreaterEqual( mbs, target_min, "USB speed slower than expected: %0.2f" % mbs )
+        print "speed", mbs
 
     def testRead(self):
         self._testSpeed(self.dev.read)
