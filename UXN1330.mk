@@ -45,3 +45,13 @@ FPGA_PART = xc6slx16-csg324-2
 FPGA_ARCH = spartan6
 UCF_FILES += $(UXN1330_DIR)/xilinx/UXN1330.ucf
 SPI_PROM_SIZE =  524288
+
+# target when xilinx is the builder to generate a ucf file with the right timing constraint
+# for the if clock.
+# if you want to use something other than the default 50.4, you should specify
+# UXN1330_IFCLK_FREQ=xx.yy in your DEPS variable.
+../$(UXN1330_DIR)/xilinx/UXN1330.ucf: ../$(UXN1330_DIR)/xilinx/UXN1330.ucf.in ../config.mk 
+	sed -e "s/IFCLKFREQ/`python ../$(UXN1330_DIR)/xilinx/ifclock.py $(DEFS)`/" $< >> $@ 
+
+ucf_echo:
+	echo "ucf files: $(UCF_FILES)"
