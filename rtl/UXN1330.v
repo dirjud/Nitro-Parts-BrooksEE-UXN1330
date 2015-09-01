@@ -606,7 +606,7 @@ module UXN1330
    reg 	      status_rst;
    
    reg  status_calib_done;
-   initial status_calib_done <= 0; // for sim
+   initial status_calib_done = 0; // for sim
    wire [31:0]  status_mcb = 0;
    wire         di_clk = ifclk;
    assign status_pll_locked = 1;
