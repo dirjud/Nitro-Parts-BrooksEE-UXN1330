@@ -631,13 +631,13 @@ module UXN1330
    // Only thing I've seen is C3_MEM_CAS_LATENCY go from 5 to 4.
 
    `ifndef UXN1330_MEMCLK_MULT
-      `define UXN1330_MEMCLK_MULT  6; 
+      `define UXN1330_MEMCLK_MULT  6 
    `endif
    `ifndef UXN1330_MEMCLK_DIV
-       `define UXN1330_MEMCLK_DIV  1;
+       `define UXN1330_MEMCLK_DIV  1
    `endif
    `ifndef UXN1330_IFCLK_FREQ
-        `define UXN1330_IFCLK_FREQ 50.4;
+        `define UXN1330_IFCLK_FREQ 50.4
    `endif
    // period in PS
    `define UXN1330_MEMCLK_PERIOD  1000000/`UXN1330_IFCLK_FREQ * `UXN1330_MEMCLK_DIV / `UXN1330_MEMCLK_MULT
