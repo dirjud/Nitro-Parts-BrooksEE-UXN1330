@@ -498,7 +498,9 @@ module mig_39 #
    localparam C3_MEM_TYPE             = "DDR2";       
    localparam C3_MEM_DENSITY          = "512Mb";       
    localparam C3_MEM_BURST_LEN        = 4;       
-   localparam C3_MEM_CAS_LATENCY      = 5;       
+   // NOTE the mig generator automatically changes this parameter from 4 to 5
+   // above 266.66 mhz. 
+   localparam C3_MEM_CAS_LATENCY      = C3_MEMCLK_PERIOD > 3750 ? 4 : 5;       
    localparam C3_MEM_NUM_COL_BITS     = 10;       
    localparam C3_MEM_DDR1_2_ODS       = "FULL";       
    localparam C3_MEM_DDR2_RTT         = "50OHMS";       

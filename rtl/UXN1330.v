@@ -621,15 +621,14 @@ module UXN1330
    // calculations at the lower level for write timing etc.
    // I tried to make all that transparent so all you need to 
    // do is specify your clock frequency and the correct
-   // multiplier and divider to get to approximately 300mhz
-   // for the dram clock.  If you go below 250 or so mhz
-   // there are CAS latency settings that the mig generator
-   // will change that should probably also be updated.  This
-   // mig is not generated with those settings changed so you'd
-   // have to regenerate the mig with your desired output freqency
-   // then do a diff against this one to see if anything changed.
-   // Only thing I've seen is C3_MEM_CAS_LATENCY go from 5 to 4.
-
+   // multiplier and divider to get to approximately somewhere between
+   // a 200-300mhz clock.
+   //
+   // NOTE under the mig_38 settings, we were using a 150mhz clock
+   // but with the PRERIOD/timing constraints set accurately, that
+   // clock speed causes the infrastructure PLL to fail to synthesize.
+   // In that case it says it can't operate below 400mhz (mem clock * 2)
+   
    `ifndef UXN1330_MEMCLK_MULT
       `define UXN1330_MEMCLK_MULT  6 
    `endif
