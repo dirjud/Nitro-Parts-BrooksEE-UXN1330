@@ -669,10 +669,11 @@ module UXN1330
    localparam C3_MEM_BANKADDR_WIDTH=2;
 `ifdef SIM
    localparam C3_SIMULATION="TRUE";
+   localparam C3_CALIB_SOFT_IP="FALSE";
 `else
    localparam C3_SIMULATION="FALSE";
-`endif
    localparam C3_CALIB_SOFT_IP="TRUE";
+`endif
 
    mig_39 #
      (
