@@ -34,6 +34,10 @@ module UXN1330_tb
 
    );
 
+`ifndef UXN1330_IFCLK_FREQ
+`define UXN1330_IFCLK_FREQ 50.4
+`endif
+
 `ifndef verilator
    reg   clk;
    initial clk=0;
