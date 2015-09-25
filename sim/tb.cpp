@@ -21,20 +21,40 @@ bool trace = false;
 #endif
 
 VUXN1330_tb *tb = NULL;
-unsigned int main_time = 0;	// Current simulation time
 
-#define CLK_HALF_PERIOD 10
+// By default main_time is 1ns in the vcd output. 
+// if you need a clock that is not an even multiple of 1ns
+// you might want to change main_time to be 1/2, 1/3 or 
+// even 1/1000 (ps) of a ns.  You'd do this by setting
+// timescale_div in init to the divider you want.
+//
+// example, setting timescale_div = 2 causes main_time to 
+// represent 500ps
+//
+// The only caveat is that I haven't figured out a way to
+// get the vcd output to reflect the timing right.
+// So if you use timescale_div of 2, you have to divide
+// the ns in the output by 2 also to understand the timing.
+// But proportionaly it works well.
+unsigned int main_time = 0;	// Current simulation time
+unsigned int timescale_div = 1; // allow main time to be 
+
+// the if clock toggles every halfdiv.  
+// default is a 50mhz clock (note actual fx3 clock is
+// 50.4 by default)
+unsigned int clk_half_period=10;
+
 #define CHECK_INIT   if(tb == NULL) { PyErr_SetString(PyExc_Exception, "You have not initialized this sim yet.  Run init() function"); return NULL; }
 
 
 double sc_time_stamp () {	// Called by $time in Verilog
-    return main_time;
+    return (double)main_time/timescale_div;
 }
 
 void advance_clk(unsigned int cycles=1) {
   while (cycles) {
     // Toggle clock
-    if ((main_time % CLK_HALF_PERIOD) == 1) {
+    if ((main_time % clk_half_period) == 1) {
       if(tb->clk) {
 	tb->clk = 0;
       } else {
@@ -45,7 +65,7 @@ void advance_clk(unsigned int cycles=1) {
 
     tb->eval();            // Evaluate model
 #if VM_TRACE
-    if(trace) tfp->dump (main_time);
+    if(trace) tfp->dump (main_time); ///timescale_div);
 #endif
     main_time++;            // Time passes...
   }
@@ -58,11 +78,15 @@ void open_trace(const char *filename) {
 #endif
 }
 
-static PyObject *init(PyObject *self, PyObject *args) {
+static PyObject *init(PyObject *self, PyObject *args, PyObject *kwds) {
   const char *filename=NULL;
+  unsigned int maintime_div=1;
+  unsigned int half_period=10;
 
-  if (!PyArg_ParseTuple(args, "|s", &filename)) {
-    PyErr_SetString(PyExc_Exception, "Optional argument should be a string specifying the vcd trace filename.");
+  char *kwlist[] = { "vcdfile", "maintime_div", "half_period", NULL };
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwds, "|sii", kwlist, &filename, &maintime_div, &half_period)) {
+    PyErr_SetString(PyExc_Exception, "usage init( vcdfile=None, maintime_div=1, half_period=10");
     return NULL;
   }
     
@@ -78,6 +102,9 @@ static PyObject *init(PyObject *self, PyObject *args) {
     open_trace(filename);
   }
 #endif
+
+  timescale_div=maintime_div;
+  clk_half_period=half_period;
 
   // pull fx3 out of reset
   advance_clk(50);
@@ -177,7 +204,7 @@ static PyObject *ndarrayFromPtr(PyObject *self, PyObject *args) {
 
 /*************************************  Vtb extension module ****************/
 static PyMethodDef Vtb_methods[] = {
-  {"init", init, METH_VARARGS,"Creates an instance of the simulation." },
+  {"init", (PyCFunction)init, METH_VARARGS|METH_KEYWORDS,"Creates an instance of the simulation." },
   {"trace",start_tracing,METH_VARARGS,"Turns on tracing to specified file." },
   {"time", time, METH_NOARGS, "Gets the current time of the simulation." },
   {"adv",  adv,  METH_VARARGS, "Advances sim x number of clk cycles." },
