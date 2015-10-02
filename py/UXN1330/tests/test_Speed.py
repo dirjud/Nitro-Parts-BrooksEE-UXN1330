@@ -7,8 +7,8 @@ class TestSpeed(DevTestCase):
     """
         This class verifies raw USB speed for reading and writing to the FPGA.
         Expected minimum speeds are 35 mb/s for USB2 and 100 mb/s for USB3
-        read and write.  These are conservative but sufficient for nVistaHD 
-        operation.
+        read and write.  These are conservative but sufficient to determine if 
+        the device is operating in USB3 mode properly.
     """
 
     def _testSpeed(self,f):
