@@ -1,6 +1,6 @@
 # Build Notes 
 # Build deps: 
-#  fx3 version d2108 
+#  fx3 version 9a742 
 #  cyfx3sdk version 1.2.3
 #    custom mods to 1.2.3:
 #      used firmware/common directory from 1.3.1 sdk to get updated build system
@@ -19,7 +19,7 @@ VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x10B
+FIRMWARE_VERSION = 0x10C
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
