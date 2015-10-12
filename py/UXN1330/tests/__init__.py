@@ -12,6 +12,7 @@ import unittest
 
 from test_Speed import *
 from test_DRAM import *
+from test_Rdwr import *
 
 #  quick hack to allow tests to 
 # share the same module name in case desired
