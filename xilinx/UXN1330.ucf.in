@@ -57,81 +57,81 @@ NET "led_b"            LOC="C2"  | IOSTANDARD=LVCMOS18 | DRIVE=2;
 NET "button"           LOC="P3"  | IOSTANDARD=LVCMOS18 | DRIVE=2 | PULLUP;
 
 
-# NET "c3_mcb_drp_clk" TNM_NET = "MEMC3_CALIB_CLK";
-# NET "c3_sysclk_2x_180" TNM_NET = "MEMC3_SYSCLK_2X_180";
-# TIMESPEC "TS_MEMC3_CAL_TO_SYS2X_180" = FROM "MEMC3_CALIB_CLK" TO "MEMC3_SYSCLK_2X_180"  TIG;
-# TIMESPEC "TS_MEMC3_CAL_TO_IFCLK" = FROM "MEMC3_CALIB_CLK" TO "ifClk"  TIG;
-
-NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
-NET "mig_39/c?_pll_lock" TIG;
-INST "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
-
-#Please uncomment the below TIG if used in a design which enables self-refresh mode
-#NET "memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
-     
-NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ##This path exists for DDR2 only
-#NET "memc3_infrastructure_inst/sys_clk_ibufg" TNM_NET = "SYS_CLK3";
-#TIMESPEC "TS_SYS_CLK3" = PERIOD "SYS_CLK3"  3.2  ns HIGH 50 %;
-
-
-############################################################################
-## I/O TERMINATION                                                          
-############################################################################
-NET "sdram_dq[*]"                                 IN_TERM = NONE;
-NET "sdram_ldqs"                                  IN_TERM = NONE;
-NET "sdram_ldqs_n"                                IN_TERM = NONE;
-NET "sdram_udqs"                                  IN_TERM = NONE;
-NET "sdram_udqs_n"                                IN_TERM = NONE;
-
-NET "sdram_addr[0]"   LOC="J7"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[1]"   LOC="J6"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[2]"   LOC="H5"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[3]"   LOC="L7"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[4]"   LOC="F3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[5]"   LOC="H4"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[6]"   LOC="H3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[7]"   LOC="H6"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[8]"   LOC="D2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[9]"   LOC="D1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[10]"  LOC="F4"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[11]"  LOC="D3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[12]"  LOC="G6"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[13]"  LOC="F6"  | IOSTANDARD = SSTL18_II;
-NET "sdram_addr[14]"  LOC="F5"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ba[0]"     LOC="F2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ba[1]"     LOC="F1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ba[2]"     LOC="E1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_cas_n"     LOC="K5"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ck"        LOC="G3"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_ck_n"      LOC="G1"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_cke"       LOC="H7"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[0]"     LOC="L2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[10]"    LOC="N2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[11]"    LOC="N1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[12]"    LOC="T2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[13]"    LOC="T1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[14]"    LOC="U2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[15]"    LOC="U1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[1]"     LOC="L1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[2]"     LOC="K2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[3]"     LOC="K1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[4]"     LOC="H2"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[5]"     LOC="H1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[6]"     LOC="J3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[7]"     LOC="J1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[8]"     LOC="M3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_dq[9]"     LOC="M1"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ldm"       LOC="K3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ldqs"      LOC="L4"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_ldqs_n"    LOC="L3"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_odt"       LOC="K6"  | IOSTANDARD = SSTL18_II;
-NET "sdram_ras_n"     LOC="L5"  | IOSTANDARD = SSTL18_II;
-NET "sdram_udm"       LOC="K4"  | IOSTANDARD = SSTL18_II;
-NET "sdram_udqs"      LOC="P2"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_udqs_n"    LOC="P1"  | IOSTANDARD = DIFF_SSTL18_II;
-NET "sdram_we_n"      LOC="E3"  | IOSTANDARD = SSTL18_II;
-NET "sdram_rzq"       LOC="P4"  | IOSTANDARD = SSTL18_II;
-NET "sdram_zio"       LOC="N4"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM># NET "c3_mcb_drp_clk" TNM_NET = "MEMC3_CALIB_CLK";
+<DISABLE_SDRAM># NET "c3_sysclk_2x_180" TNM_NET = "MEMC3_SYSCLK_2X_180";
+<DISABLE_SDRAM># TIMESPEC "TS_MEMC3_CAL_TO_SYS2X_180" = FROM "MEMC3_CALIB_CLK" TO "MEMC3_SYSCLK_2X_180"  TIG;
+<DISABLE_SDRAM># TIMESPEC "TS_MEMC3_CAL_TO_IFCLK" = FROM "MEMC3_CALIB_CLK" TO "ifClk"  TIG;
+<DISABLE_SDRAM>
+<DISABLE_SDRAM>NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+<DISABLE_SDRAM>NET "mig_39/c?_pll_lock" TIG;
+<DISABLE_SDRAM>INST "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+<DISABLE_SDRAM>
+<DISABLE_SDRAM>#Please uncomment the below TIG if used in a design which enables self-refresh mode
+<DISABLE_SDRAM>#NET "memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;
+<DISABLE_SDRAM>     
+<DISABLE_SDRAM>NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/CKE_Train" TIG; ##This path exists for DDR2 only
+<DISABLE_SDRAM>#NET "memc3_infrastructure_inst/sys_clk_ibufg" TNM_NET = "SYS_CLK3";
+<DISABLE_SDRAM>#TIMESPEC "TS_SYS_CLK3" = PERIOD "SYS_CLK3"  3.2  ns HIGH 50 %;
+<DISABLE_SDRAM>
+<DISABLE_SDRAM>
+<DISABLE_SDRAM>############################################################################
+<DISABLE_SDRAM>## I/O TERMINATION                                                          
+<DISABLE_SDRAM>############################################################################
+<DISABLE_SDRAM>NET "sdram_dq[*]"                                 IN_TERM = NONE;
+<DISABLE_SDRAM>NET "sdram_ldqs"                                  IN_TERM = NONE;
+<DISABLE_SDRAM>NET "sdram_ldqs_n"                                IN_TERM = NONE;
+<DISABLE_SDRAM>NET "sdram_udqs"                                  IN_TERM = NONE;
+<DISABLE_SDRAM>NET "sdram_udqs_n"                                IN_TERM = NONE;
+<DISABLE_SDRAM>
+<DISABLE_SDRAM>NET "sdram_addr[0]"   LOC="J7"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[1]"   LOC="J6"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[2]"   LOC="H5"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[3]"   LOC="L7"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[4]"   LOC="F3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[5]"   LOC="H4"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[6]"   LOC="H3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[7]"   LOC="H6"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[8]"   LOC="D2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[9]"   LOC="D1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[10]"  LOC="F4"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[11]"  LOC="D3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[12]"  LOC="G6"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[13]"  LOC="F6"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_addr[14]"  LOC="F5"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ba[0]"     LOC="F2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ba[1]"     LOC="F1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ba[2]"     LOC="E1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_cas_n"     LOC="K5"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ck"        LOC="G3"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ck_n"      LOC="G1"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_cke"       LOC="H7"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[0]"     LOC="L2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[10]"    LOC="N2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[11]"    LOC="N1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[12]"    LOC="T2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[13]"    LOC="T1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[14]"    LOC="U2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[15]"    LOC="U1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[1]"     LOC="L1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[2]"     LOC="K2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[3]"     LOC="K1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[4]"     LOC="H2"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[5]"     LOC="H1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[6]"     LOC="J3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[7]"     LOC="J1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[8]"     LOC="M3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_dq[9]"     LOC="M1"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ldm"       LOC="K3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ldqs"      LOC="L4"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ldqs_n"    LOC="L3"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_odt"       LOC="K6"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_ras_n"     LOC="L5"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_udm"       LOC="K4"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_udqs"      LOC="P2"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_udqs_n"    LOC="P1"  | IOSTANDARD = DIFF_SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_we_n"      LOC="E3"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_rzq"       LOC="P4"  | IOSTANDARD = SSTL18_II;
+<DISABLE_SDRAM>NET "sdram_zio"       LOC="N4"  | IOSTANDARD = SSTL18_II;
 
 
 NET "l10n"            LOC="A7";

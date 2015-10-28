@@ -37,6 +37,10 @@ UXN1330_SYN_FILES += \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_controller.v \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_mcb_controller.v \
 	$(NITRO_PARTS_DIR)/Xilinx/Spartan/rtl/di2mig.v
+
+UCF_DRAM=\#
+else
+UCF_DRAM=
 endif
 
 SIM_TOP_MODULE=UXN1330_tb
@@ -52,6 +56,7 @@ SPI_PROM_SIZE =  524288
 # UXN1330_IFCLK_FREQ=xx.yy in your DEPS variable.
 ../$(UXN1330_DIR)/xilinx/UXN1330.ucf: ../$(UXN1330_DIR)/xilinx/UXN1330.ucf.in ../config.mk 
 	sed -e "s/IFCLKFREQ/`python ../$(UXN1330_DIR)/xilinx/ifclock.py $(DEFS)`/" $< > $@ 
+	sed -i -e "s/<DISABLE_SDRAM>/$(UCF_DRAM)/" $@
 
 ucf_echo:
 	echo "ucf files: $(UCF_FILES)"
