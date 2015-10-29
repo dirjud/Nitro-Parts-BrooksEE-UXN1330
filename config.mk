@@ -56,7 +56,6 @@ SIM_LIBS=unisims_ver secureip
 SYN_FILES = \
 	$(UXN1330_SYN_FILES) \
 	rtl_auto/FPGATerminal.v \
-	rtl_auto/DRAM_CTRLTerminal.v \
 	rtl/ProjectTop.v \
 
 # CUSTOM targets should go here

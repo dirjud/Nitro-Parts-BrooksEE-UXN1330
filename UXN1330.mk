@@ -36,6 +36,7 @@ UXN1330_SYN_FILES += \
 	$(UXN1330_DIR)/rtl/ddr2/mcb_soft_calibration.v \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_controller.v \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_mcb_controller.v \
+	rtl_auto/DRAM_CTRLTerminal.v \
 	$(NITRO_PARTS_DIR)/Xilinx/Spartan/rtl/di2mig.v
 
 UCF_DRAM =
