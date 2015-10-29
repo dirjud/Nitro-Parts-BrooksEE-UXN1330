@@ -1,5 +1,4 @@
 NITRO_PARTS_DIR = ../..
-include ../UXN1330.mk
 
 # INC_PATHS specifies a space separated list of paths to the files
 # that are `included in any of the verilog source files.  See also
@@ -66,3 +65,5 @@ SYN_FILES = \
 DI_FILE = terminals.py
 # include di.mk to auto build the di files
 include ../../../lib/Makefiles/di.mk
+include ../UXN1330.mk
+
