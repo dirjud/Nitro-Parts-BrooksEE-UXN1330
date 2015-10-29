@@ -82,6 +82,11 @@ module mig_39 #
                                        // incoming clock to MEMCLK_PERIOD
    parameter C3_MEMCLK_DIV           = 1, // divider required to get 
                                        // incoming clock to MEMCLK_PERIOD
+   parameter C3_MEMCLK_DIV2          = 1, // 2nd divider for actual mem clock if first div
+                                        // can't fall within range PLL_ADV can
+                                        // generate. (i.e., generate 250mhz
+                                        // clock and div2=2 if you want
+                                        // a 125mhz clock.
    parameter C3_CALIB_SOFT_IP        = "TRUE",       
                                        // # = TRUE, Enables the soft calibration logic,
                                        // # = FALSE, Disables the soft calibration logic.
@@ -467,8 +472,8 @@ module mig_39 #
 // Chapter-2 of ug388.pdf in the /docs directory for further details.
    localparam C3_PORT_ENABLE              = 6'b001111;
    localparam C3_PORT_CONFIG             =  "B32_B32_B32_B32";
-   localparam C3_CLKOUT0_DIVIDE       = 1;       
-   localparam C3_CLKOUT1_DIVIDE       = 1;       
+   localparam C3_CLKOUT0_DIVIDE       = C3_MEMCLK_DIV2;       
+   localparam C3_CLKOUT1_DIVIDE       = C3_MEMCLK_DIV2;
    localparam C3_CLKOUT2_DIVIDE       = 16;       
    localparam C3_CLKOUT3_DIVIDE       = 8;       
    localparam C3_CLKFBOUT_MULT        = 2;
@@ -500,7 +505,8 @@ module mig_39 #
    localparam C3_MEM_BURST_LEN        = 4;       
    // NOTE the mig generator automatically changes this parameter from 4 to 5
    // above 266.66 mhz. 
-   localparam C3_MEM_CAS_LATENCY      = C3_MEMCLK_PERIOD > 3750 ? 4 : 5;       
+   localparam C3_MEM_CAS_LATENCY      = C3_MEMCLK_PERIOD < 3750 ? 5 :        
+                                        C3_MEMCLK_PERIOD < 5000 ? 4 : 3; // not sure exactly where it goes for 4 to 3 200mhz?
    localparam C3_MEM_NUM_COL_BITS     = 10;       
    localparam C3_MEM_DDR1_2_ODS       = "FULL";       
    localparam C3_MEM_DDR2_RTT         = "50OHMS";       

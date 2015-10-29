@@ -635,11 +635,14 @@ module UXN1330
    `ifndef UXN1330_MEMCLK_DIV
        `define UXN1330_MEMCLK_DIV  1
    `endif
+   `ifndef UXN1330_MEMCLK_DIV2
+       `define UXN1330_MEMCLK_DIV2 1
+   `endif
    `ifndef UXN1330_IFCLK_FREQ
         `define UXN1330_IFCLK_FREQ 50.4
    `endif
    // period in PS
-   `define UXN1330_MEMCLK_PERIOD  1000000/`UXN1330_IFCLK_FREQ * `UXN1330_MEMCLK_DIV / `UXN1330_MEMCLK_MULT
+   `define UXN1330_MEMCLK_PERIOD  1000000/`UXN1330_IFCLK_FREQ * `UXN1330_MEMCLK_DIV * `UXN1330_MEMCLK_DIV2 / `UXN1330_MEMCLK_MULT
 
    wire         c3_clk0;
    wire         c3_rst0;
@@ -660,6 +663,7 @@ module UXN1330
    localparam C3_MEMCLK_PERIOD=`UXN1330_MEMCLK_PERIOD;
    localparam C3_MEMCLK_MULT=`UXN1330_MEMCLK_MULT;
    localparam C3_MEMCLK_DIV=`UXN1330_MEMCLK_DIV;
+   localparam C3_MEMCLK_DIV2=`UXN1330_MEMCLK_DIV2;
    localparam C3_RST_ACT_LOW=1;
    localparam C3_INPUT_CLK_TYPE="SINGLE_ENDED";
    localparam DEBUG_EN=1;
@@ -696,6 +700,7 @@ module UXN1330
       .C3_MEMCLK_PERIOD(C3_MEMCLK_PERIOD), // Memory data transfer clock period
       .C3_MEMCLK_MULT(C3_MEMCLK_MULT),
       .C3_MEMCLK_DIV(C3_MEMCLK_DIV),
+      .C3_MEMCLK_DIV2(C3_MEMCLK_DIV2),
       .C3_SIMULATION(C3_SIMULATION), // # = TRUE, Simulating the design. Useful to reduce the simulation time,
                                // # = FALSE, Implementing the design.
       .C3_RST_ACT_LOW(C3_RST_ACT_LOW) // # = 1 for active low reset,
