@@ -51,6 +51,10 @@ double sc_time_stamp () {	// Called by $time in Verilog
     return (double)main_time/timescale_div;
 }
 
+#ifdef USER_TB_EVAL
+void USER_TB_EVAL();
+#endif
+
 void advance_clk(unsigned int cycles=1) {
   while (cycles) {
     // Toggle clock
@@ -62,6 +66,9 @@ void advance_clk(unsigned int cycles=1) {
 	tb->clk = 1; 
       }
     }
+#ifdef USER_TB_EVAL
+    USER_TB_EVAL();
+#endif
 
     tb->eval();            // Evaluate model
 #if VM_TRACE
