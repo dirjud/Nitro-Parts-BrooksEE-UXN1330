@@ -17,6 +17,11 @@ extern rdwr_cmd_t gRdwrCmd;
 #define VERSION_MINOR 0
 #define VERSION (VERSION_MAJOR<<16)|VERSION_MINOR
 
+void uxn1330_boot(uint16_t term) {
+    // set gpios
+    CyU3PGpioSetValue( UXN1330_VCON_EN, CyTrue );
+}
+
 uint16_t rdwr_vcon_pot(uint8_t *val, CyBool_t write) {
     uint16_t status;
     CyU3PI2cPreamble_t preamble;
