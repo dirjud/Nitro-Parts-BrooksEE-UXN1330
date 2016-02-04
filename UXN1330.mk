@@ -47,6 +47,10 @@ UCF_DRAM = \#
 
 endif
 
+# override this if you want the fpga to drive stronger than the lowest setting
+# settings are 2, 4, 6, 8, 12, 16, 24 mA (ug381)
+FPGA_TO_FX3_DRIVE ?= 2
+
 SIM_TOP_MODULE=UXN1330_tb
 FPGA_TOP = UXN1330
 FPGA_PART = xc6slx16-csg324-2
@@ -61,5 +65,6 @@ SPI_PROM_SIZE =  524288
 ../$(UXN1330_DIR)/xilinx/UXN1330.ucf: ../$(UXN1330_DIR)/xilinx/UXN1330.ucf.in ../config.mk 
 	sed -e "s/IFCLKFREQ/`python ../$(UXN1330_DIR)/xilinx/ifclock.py $(DEFS)`/" $< > $@ 
 	sed -i -e "s/<DISABLE_SDRAM>/$(UCF_DRAM)/" $@
+	sed -i -e "s/<FPGA_TO_FX3_DRIVE>/$(FPGA_TO_FX3_DRIVE)/" $@
 
 
