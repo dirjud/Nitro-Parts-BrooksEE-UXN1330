@@ -18,7 +18,7 @@ class TestRdwr(DevTestCase):
         yield 1025
         yield 1023
         yield 2048
-        for i in xrange ( 10 ):
+        for i in xrange ( 100 ):
             yield random.randint ( 2, 10*1024*1024 ) 
 
 
@@ -26,7 +26,6 @@ class TestRdwr(DevTestCase):
         for s in self._sizes():
             r=numpy.asarray(numpy.random.randint(2**32,size=s),dtype=numpy.uint8)
             try:
-                print t, "write", s
                 self.dev.write(t,0,r,10000)
             except Exception, _inst:
                 self.fail ( "Write to %s bytes=%d fail: %s" % ( t, s, str(_inst) ) )
@@ -34,7 +33,6 @@ class TestRdwr(DevTestCase):
         for s in self._sizes():
             d=numpy.zeros( (s,), dtype=numpy.uint8)
             try:
-                print t, "read", s
                 self.dev.read(t,0,d,10000)
             except Exception, _inst:
                 self.fail ( "Read from %s bytes=%d fail: %s" % ( t, s, str(_inst) ) )
@@ -49,9 +47,7 @@ class TestRdwr(DevTestCase):
         self._testr('DUMMY_FX3')
     def testFPGAread(self):
         self._testr('DUMMY_FPGA')
-
     def testFPGAwrite(self):
-        self.skipTest('Causes usb reset.')
         self._testw('DUMMY_FPGA')
 
 
