@@ -58,6 +58,40 @@ SYN_FILES = \
 	rtl_auto/FPGATerminal.v \
 	rtl/ProjectTop.v \
 
+# these params allow you to customize the clock speed of the dram
+# The dram can operate from 125mhz to 300mhz.
+# The PLL_ADV that generates the dram clock generates a 2x clock
+# that is then divided by 2 to get the dram clock output.
+# The multiplier you specify here is multipled 2x internally to
+# calculate the 2x clock so these multipliers must generate the actual
+# clock speed you wish.
+#
+# Constraints (ug382)
+#  VCO of the PLL must be in the 400-1000mhz range.  You need to 
+#  remember the internal clock 2x multiplier when considering this.
+#  Result is your VCO output has to be in the 200-500mhz range. 
+
+#  You can get results below 200mhz for the dram by using UXN1330_MEMCLK_DIV2
+#  which further devides VCO after the first constraint is met.
+#
+#  always specify UXN1330_IFCLK_FREQ in terms of mhz in order to 
+#  allow the PLL to synthesize
+#
+# 150mhz dram clock based on 50.4 mhz ifclk
+#  UXN1330_MEMCLK_MULT=6 # 600 mhz vco / 2 (internally) = 300mhz vco 
+#  UXN1330_MEMCLK_DIV=1 # leave 1 to meet vco constraint.
+#  UXN1330_MEMCLK_DIV2=2 # 300 / 2 = 150mhz dram clock
+
+# see py/dram_clock.py for easy finding values to run the dram at
+
+# example for 221 mhz dram clock from 80.64 ifclk.
+DEFS = UXN1330_MEMCLK_MULT=11 UXN1330_MEMCLK_DIV=2 UXN1330_MEMCLK_DIV2=2 UXN1330_IFCLK_FREQ=80.64
+
+# this param can be used to to override the default drive strength. Might be necessary if low power
+# mode and faster ifclock are being used.
+
+FPGA_TO_FX3_DRIVE = 1
+
 # CUSTOM targets should go here
 
 # DI_FILE is used by the di.mk file
