@@ -1,25 +1,14 @@
 # Build Notes 
 # Build deps: 
-#  fx3 version 02b2d 
-#  cyfx3sdk version 1.2.3
-#    custom mods to 1.2.3:
-#      used firmware/common directory from 1.3.1 sdk to get updated build system
-#      modified fx3_build_common.mk to not link to the 1.3.1 cyu3sport.a which 
-#      didn't exist in 1.2.3
-#    Reasons
-#      * Updating to 1.3.1 causes some devices to have lots of transfer errors
-#      (phy/link) and/or not be able to enumerate at all.  No solution for this
-#      yet. Not yet sure why the sdk version matters.
-#      * 1.2.3 build system doesn't have support for 256k part. Device wasn't 
-#      always working correctly (example make fx3) when built without altering 
-#      using the updated common dir.
+#  fx3 version d8568 
+#  cyfx3sdk version 1.3.3
 
 MODULE = uxn1330
 VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x110
+FIRMWARE_VERSION = 0x111
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
