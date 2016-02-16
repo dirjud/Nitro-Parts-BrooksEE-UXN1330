@@ -614,21 +614,11 @@ module UXN1330
    
    `include "DRAM_CTRLTerminalInstance.v"
 
-   // NOTE When MIG generator generates the mig_39.v, you specify a 
-   // clock input PERIOD in PS and it then generates a multiplier
-   // and divider that it consideres the best options for the 
-   // dram.  It uses the PERIOD you specify in a whole bunch of
-   // calculations at the lower level for write timing etc.
-   // I tried to make all that transparent so all you need to 
-   // do is specify your clock frequency and the correct
-   // multiplier and divider to get to approximately somewhere between
-   // a 200-300mhz clock.
-   //
-   // NOTE under the mig_38 settings, we were using a 150mhz clock
-   // but with the PRERIOD/timing constraints set accurately, that
-   // clock speed causes the infrastructure PLL to fail to synthesize.
-   // In that case it says it can't operate below 400mhz (mem clock * 2)
-   
+   // NOTE 
+   // see UXN1330/config.mk for clock explanation.
+   // if not defined, default is to run the dram at
+   // 150 mhz, which was how it was before the mig 
+   // upgrade.
    `ifndef UXN1330_MEMCLK_MULT
       `define UXN1330_MEMCLK_MULT  6 
    `endif
@@ -636,7 +626,7 @@ module UXN1330
        `define UXN1330_MEMCLK_DIV  1
    `endif
    `ifndef UXN1330_MEMCLK_DIV2
-       `define UXN1330_MEMCLK_DIV2 1
+       `define UXN1330_MEMCLK_DIV2 2
    `endif
    `ifndef UXN1330_IFCLK_FREQ
         `define UXN1330_IFCLK_FREQ 50.4
