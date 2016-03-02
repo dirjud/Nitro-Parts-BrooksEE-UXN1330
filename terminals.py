@@ -27,7 +27,7 @@ di=DeviceInterface(
         Terminal(
             name='UXN1330',
             regAddrWidth=8,
-            regDataWidth=8, # NOTE need to fix nitro get width
+            regDataWidth=8,
             addr=20,
             register_list=[
                 Register(name='version',
@@ -99,8 +99,10 @@ di=DeviceInterface(
                 Register(name='version',
                          type='int',
                          mode='read',
-                         subregs=[SubReg(name="minor", width=16),
-                                  SubReg(name="major", width=16),],
+                         subregs=[SubReg(name='minor', width=8),
+                                  SubReg(name='major', width=8),
+                                  SubReg(name="feature", width=8),
+                                  SubReg(name="build", width=8)],
                          comment='FPGA release version',
                          ),
                 Register(name='sw_reset',
