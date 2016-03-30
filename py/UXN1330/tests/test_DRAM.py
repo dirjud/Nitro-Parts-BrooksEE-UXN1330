@@ -16,7 +16,7 @@ class TestDRAM(DevTestCase):
             match.
         """
         size=16*1024*1024
-        r=numpy.asarray(numpy.random.randint(2**32,size=size),dtype=numpy.uint32)
+        r=numpy.asarray(numpy.random.rand(size) * 2**32,dtype=numpy.uint32)
         #r=numpy.zeros((size,),dtype=numpy.uint32)
         self.dev.write('DRAM',0,r)
         buf=numpy.zeros( (size,), dtype=numpy.uint32)

@@ -24,7 +24,7 @@ class TestRdwr(DevTestCase):
 
     def _testw(self,t):
         for s in self._sizes():
-            r=numpy.asarray(numpy.random.randint(2**32,size=s),dtype=numpy.uint8)
+            r=numpy.asarray(numpy.random.rand(s) * 255,dtype=numpy.uint8)
             try:
                 self.dev.write(t,0,r,10000)
             except Exception, _inst:
