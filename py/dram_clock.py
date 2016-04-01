@@ -28,6 +28,7 @@ print "Dmin", dmin, "Dmax", dmax, "Mmin", mmin, "Mmax", mmax, "Mideal", mideal
 target = float(sys.argv[2])
 
 mmax /= 2 # because of the 2x clock
+mmin /= 2
 
 best = fin * mmin / dmin
 print "initial %0.2f *" % fin, mmin, "/",dmin,"=", best
