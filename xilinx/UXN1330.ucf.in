@@ -62,9 +62,9 @@ NET "button"           LOC="P3"  | IOSTANDARD=LVCMOS18 | DRIVE=2 | PULLUP;
 <DISABLE_SDRAM># TIMESPEC "TS_MEMC3_CAL_TO_SYS2X_180" = FROM "MEMC3_CALIB_CLK" TO "MEMC3_SYSCLK_2X_180"  TIG;
 <DISABLE_SDRAM># TIMESPEC "TS_MEMC3_CAL_TO_IFCLK" = FROM "MEMC3_CALIB_CLK" TO "ifClk"  TIG;
 <DISABLE_SDRAM>
-<DISABLE_SDRAM>NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
-<DISABLE_SDRAM>NET "mig_39/c?_pll_lock" TIG;
-<DISABLE_SDRAM>INST "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
+<DISABLE_SDRAM>#NET "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/selfrefresh_mcb_mode" TIG;
+<DISABLE_SDRAM>#NET "mig_39/c?_pll_lock" TIG;
+<DISABLE_SDRAM>#INST "mig_39/memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/DONE_SOFTANDHARD_CAL*" TIG;
 <DISABLE_SDRAM>
 <DISABLE_SDRAM>#Please uncomment the below TIG if used in a design which enables self-refresh mode
 <DISABLE_SDRAM>#NET "memc?_wrapper_inst/mcb_ui_top_inst/mcb_raw_wrapper_inst/gen_term_calib.mcb_soft_calibration_top_inst/mcb_soft_calibration_inst/SELFREFRESH_MCB_REQ" TIG;

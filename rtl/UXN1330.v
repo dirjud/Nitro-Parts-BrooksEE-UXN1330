@@ -612,7 +612,12 @@ module UXN1330
    assign status_pll_locked = 1;
    assign status_selfrefresh_mode = 0;
    
+`ifndef DISABLE_DRAM_TERM
    `include "DRAM_CTRLTerminalInstance.v"
+`else
+   wire 	mcb_reset = 0;
+   wire 	mode_selfrefresh = 0;
+`endif   
 
    // NOTE 
    // see UXN1330/config.mk for clock explanation.
@@ -832,24 +837,42 @@ module UXN1330
    
    always @(*) begin
 `ifndef DISABLE_SDRAM
+`ifndef DISABLE_DRAM_TERM
       if(di_term_addr == `TERM_DRAM) begin
          di_reg_datao = dram_reg_datao;
          di_read_rdy  = dram_read_rdy;
          di_write_rdy = dram_write_rdy;
          di_transfer_status = dram_transfer_status;
-      end else if(di_term_addr == `TERM_DRAM_CTRL) begin
+      end else 
+
+      if(di_term_addr == `TERM_DRAM_CTRL) begin
          di_reg_datao = DRAM_CTRLTerminal_reg_datao;
          di_read_rdy  = 1;
          di_write_rdy = 1;
          di_transfer_status = 0;
       end else
-`endif      
+`endif
+`endif
+
+`ifndef DISABLE_DUMMY_TERM
      if(di_term_addr == `TERM_DUMMY_FPGA) begin
 	 di_reg_datao = (di_reg_addr[0]) ? 32'hBBAA9988 : ~32'hBBAA9988;
 	 di_read_rdy  = 1;
 	 di_write_rdy = 1;
 	 di_transfer_status = 0;
-      end else begin
+      end else
+`endif
+	
+      if(1'b0) begin
+	 // create an always false condition so that this if/else
+	 // syntax works when all the previous conditions are ifdef'd
+	 // out
+         di_reg_datao = pt_di_reg_datao;
+         di_read_rdy  = pt_di_read_rdy;
+         di_write_rdy = pt_di_write_rdy;
+         di_transfer_status = pt_di_transfer_status;
+      
+     end else begin
          di_reg_datao = pt_di_reg_datao;
          di_read_rdy  = pt_di_read_rdy;
          di_write_rdy = pt_di_write_rdy;
@@ -858,6 +881,7 @@ module UXN1330
    end
    
 `ifndef DISABLE_SDRAM
+`ifndef DISABLE_DRAM_TERM      
    wire term_dram       = (di_term_addr == `TERM_DRAM);
    wire dram_write      = term_dram && di_write;
    wire dram_write_mode = term_dram && di_write_mode;
@@ -896,7 +920,7 @@ module UXN1330
       );
    
    
-
+`endif
 `endif
 
 endmodule

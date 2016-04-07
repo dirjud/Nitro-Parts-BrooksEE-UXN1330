@@ -36,8 +36,12 @@ UXN1330_SYN_FILES += \
 	$(UXN1330_DIR)/rtl/ddr2/mcb_soft_calibration.v \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_controller.v \
 	$(UXN1330_DIR)/rtl/ddr2/iodrp_mcb_controller.v \
+
+ifeq (,$(findstring DISABLE_DRAM_TERM, $(DEFS)))
+UXN1330_SYN_FILES += \
 	rtl_auto/DRAM_CTRLTerminal.v \
 	$(NITRO_PARTS_DIR)/Xilinx/Spartan/rtl/di2mig.v
+endif
 
 UCF_DRAM =
 
