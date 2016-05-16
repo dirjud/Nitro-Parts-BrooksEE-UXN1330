@@ -85,12 +85,14 @@ SYN_FILES = \
 # see py/dram_clock.py for easy finding values to run the dram at
 
 # example for 221 mhz dram clock from 80.64 ifclk.
-DEFS = UXN1330_MEMCLK_MULT=11 UXN1330_MEMCLK_DIV=2 UXN1330_MEMCLK_DIV2=2 UXN1330_IFCLK_FREQ=80.64
+#DEFS = UXN1330_MEMCLK_MULT=11 UXN1330_MEMCLK_DIV=2 UXN1330_MEMCLK_DIV2=2 UXN1330_IFCLK_FREQ=80.64
+# default 150mhz dram 50.4mhz ifclk
+DEFS = UXN1330_MEMCLK_MULT=6 UXN1330_MEMCLK_DIV=1 UXN1330_MEMCLK_DIV2=2 UXN1330_IFCLK_FREQ=50.4
 
 # this param can be used to to override the default drive strength. Might be necessary if low power
 # mode and faster ifclock are being used.
 
-FPGA_TO_FX3_DRIVE = 1
+FPGA_TO_FX3_DRIVE = 2
 
 # CUSTOM targets should go here
 
