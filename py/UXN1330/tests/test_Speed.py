@@ -11,21 +11,23 @@ class TestSpeed(DevTestCase):
         the device is operating in USB3 mode properly.
     """
 
-    def _testSpeed(self,f):
+    def _testSpeed(self,t,f):
         """
             f is read/write, 
         """
         fx3 = self.dev.get_pid() == 0x1330
         usb3 = fx3 and self.dev.get('FX3','USB3')
 
-        buf='\x00'*1024*1024*100
+        MB=300
+
+        buf='\x00'*1024*1024*MB
 
         t1=time()
-        f('DUMMY_FPGA',0,buf)
+        f(t,0,buf, 4000)
         t2=time()
-        mbs=100.0/(t2-t1) 
+        mbs=float(MB)/(t2-t1) 
 
-        if usb3:
+        if usb3 and f==self.dev.read:
             target_min = 100
         else:
             target_min = 35
@@ -33,11 +35,17 @@ class TestSpeed(DevTestCase):
         self.assertGreaterEqual( mbs, target_min, "USB speed slower than expected: %0.2f" % mbs )
         print "speed", mbs
 
-    def testRead(self):
-        self._testSpeed(self.dev.read)
+    def testFX3Read(self):
+        self._testSpeed('DUMMY_FX3',self.dev.read)
 
-    def testWrite(self):
-        self._testSpeed(self.dev.write)
+    def testFX3Write(self):
+        self._testSpeed('DUMMY_FX3',self.dev.write)
+
+    def testFPGARead(self):
+        self._testSpeed('DUMMY_FPGA',self.dev.read)
+
+    def testFPGAWrite(self):
+        self._testSpeed('DUMMY_FPGA',self.dev.write)
 
     def testUSB(self):
         """
