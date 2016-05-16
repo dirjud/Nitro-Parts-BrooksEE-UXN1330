@@ -1,6 +1,6 @@
 # Build Notes 
 # Build deps: 
-#  fx3 version d8568 
+#  fx3 version 67889 
 #  cyfx3sdk version 1.3.3
 
 MODULE = uxn1330
@@ -8,7 +8,7 @@ VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x111
+FIRMWARE_VERSION = 0x112
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
