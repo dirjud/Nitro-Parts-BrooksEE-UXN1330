@@ -1,14 +1,15 @@
 # Build Notes 
 # Build deps: 
-#  fx3 version 67889 
+#  fx3 version b94d9 
 #  cyfx3sdk version 1.3.3
+#  NOTE - cyfxtx in cyfx3sdk must be modified to use last 32k boot os mem for buffers.
 
 MODULE = uxn1330
 VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x112
+FIRMWARE_VERSION = 0x113
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
