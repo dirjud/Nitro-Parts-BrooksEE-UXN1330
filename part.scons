@@ -1,0 +1,11 @@
+Import('env')
+
+xml=env.Diconv( 'UXN1330.xml' ,'terminals.py')
+env.DIDepends(xml, 'Cypress/fx3/fx3.xml')
+env.DIDepends(xml, 'Xilinx/Spartan/Spartan.xml')
+env.DIDepends(xml, 'Numonyx/M25P/M25P.xml')
+env.Xml(xml)
+
+env.Py('BrooksEE/UXN1330', Glob('py/UXN1330/*'))
+
+
