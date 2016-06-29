@@ -1,0 +1,56 @@
+
+try:
+    Import ( 'disable_sdram' )
+except:
+    print "Default disable_sdram False"
+    disable_sdram=False
+    
+try:
+    Import ('disable_dram_term' )    
+except:
+    print "Default disable_dram_term False"
+    disable_dram_term=False    
+
+UXN1330_v_sources = [ 
+	File('rtl/UXN1330.v'),
+    File('../../lib/HostInterface/rtl/Fx3HostInterface.v') ]
+    
+UXN1330_inc_dirs = [
+        Dir('sim/ddr2'),
+        Dir('../../lib/xilinx' )
+        ]
+
+UXN1330_sim_sources = [
+        File('sim/UXN1330_tb.v'),
+        File('../../lib/HostInterface/models/fx3.v' )
+        ]
+
+if not disable_sdram:
+    UXN1330_v_sources += [
+        File('rtl/ddr2/mig_39.v'),
+        File('rtl/ddr2/infrastructure.v'),
+        File('rtl/ddr2/memc_wrapper.v' ),
+        File('rtl/ddr2/mcb_ui_top.v' ),
+        File('rtl/ddr2/mcb_raw_wrapper.v' ),
+        File('rtl/ddr2/mcb_soft_calibration_top.v' ),
+        File('rtl/ddr2/mcb_soft_calibration.v' ),
+        File('rtl/ddr2/iodrp_mcb_controller.v' )
+    ]
+    
+    UXN1330_sim_sources += [
+        File('sim/ddr2/ddr2_model_c3.v' )
+        ]
+
+if not disable_dram_term:
+    UXN1330_v_sources += [
+        'rtl_auto/DRAM_CTRLTerminal.v',
+        File('../../Xilinx/Spartan/rtl/di2mig.v')
+        ]
+
+UXN1330_sim_defs = ['x512Mb', 'sg25E', 'x16', 'IMAGER_CALLBACKS', 'SIM']
+        
+
+Export ('UXN1330_v_sources UXN1330_inc_dirs UXN1330_sim_sources UXN1330_sim_defs')
+
+
+
