@@ -1,3 +1,4 @@
+Import ('env')
 
 try:
     Import ( 'disable_sdram' )
@@ -9,7 +10,19 @@ try:
     Import ('disable_dram_term' )    
 except:
     print "Default disable_dram_term False"
-    disable_dram_term=False    
+    disable_dram_term=False
+    
+try:
+    Import('ifclk_freq')
+except:
+    print "Default ifclk_freq to 50.4"
+    ifclk_freq=50.4
+    
+try:
+    Import('fpga_to_fx3_drive')
+except:
+    print "Default fpga to fx3 drive strength 2"
+    fpga_to_fx3_drive=2            
 
 UXN1330_v_sources = [ 
 	File('rtl/UXN1330.v'),
@@ -34,6 +47,7 @@ if not disable_sdram:
         File('rtl/ddr2/mcb_raw_wrapper.v' ),
         File('rtl/ddr2/mcb_soft_calibration_top.v' ),
         File('rtl/ddr2/mcb_soft_calibration.v' ),
+        File('rtl/ddr2/iodrp_controller.v' ),
         File('rtl/ddr2/iodrp_mcb_controller.v' )
     ]
     
@@ -48,9 +62,24 @@ if not disable_dram_term:
         ]
 
 UXN1330_sim_defs = ['x512Mb', 'sg25E', 'x16', 'IMAGER_CALLBACKS', 'SIM']
-        
 
-Export ('UXN1330_v_sources UXN1330_inc_dirs UXN1330_sim_sources UXN1330_sim_defs')
+
+def ucf_gen(target,source,env):
+    o=open( target[0].path, 'w' )
+    i=open( source[0].path )
+    for line in i:
+        o.write ( line.replace('IFCLKFREQ', str(ifclk_freq)).
+                       replace('<DISABLE_SDRAM>', '#' if disable_sdram else '').
+                       replace('<FPGA_TO_FX3_DRIVE>', str(fpga_to_fx3_drive) ) )
+                       
+
+UXN1330_ucf_files = [env.Command ( File('xilinx/UXN1330.ucf'),
+                                  File('xilinx/UXN1330.ucf.in'),
+                                  [ucf_gen]) ]
+
+Export ('UXN1330_v_sources UXN1330_inc_dirs' )
+Export ( 'UXN1330_sim_sources UXN1330_sim_defs')
+Export ( 'UXN1330_ucf_files' )
 
 
 
