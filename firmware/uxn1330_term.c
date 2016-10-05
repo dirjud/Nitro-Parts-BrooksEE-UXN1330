@@ -55,20 +55,18 @@ uint16_t rdwr_vcon_pot(uint8_t *val, CyBool_t write) {
 
 
 uint16_t uxn1330_read(CyU3PDmaBuffer_t* pBuf) {
+ memset(pBuf->buffer,0,gRdwrCmd.header.transfer_length);
  switch ( gRdwrCmd.header.reg_addr ) {
     case UXN1330_VERSION:
-        if (gRdwrCmd.header.transfer_length == sizeof(uint32_t)) {
+        {
             uint32_t version=VERSION;
             CyU3PMemCopy( pBuf->buffer, (uint8_t*)&version, sizeof(version) );
             return 0;
-        } else {
-            log_error ( "Invalid transfer length: %d\n", gRdwrCmd.header.transfer_length );
         }
-        break;
     case UXN1330_LP_B:
     case UXN1330_V18_EN:
     case UXN1330_VCON_EN:
-        if (gRdwrCmd.header.transfer_length==1) {
+        { 
             CyBool_t val;
             CyU3PReturnStatus_t ret;
             ret=CyU3PGpioGetValue( gRdwrCmd.header.reg_addr, &val );
@@ -80,8 +78,6 @@ uint16_t uxn1330_read(CyU3PDmaBuffer_t* pBuf) {
             } else {
                 log_error ( "gpio read failed: %d\n", ret );
             }
-        } else {
-            log_error ( "Invalid transfer length: %d\n", gRdwrCmd.header.transfer_length );
         }
         break;
     case UXN1330_VCON_POT:

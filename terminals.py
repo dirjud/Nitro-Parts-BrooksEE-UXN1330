@@ -27,7 +27,7 @@ di=DeviceInterface(
         Terminal(
             name='UXN1330',
             regAddrWidth=8,
-            regDataWidth=8,
+            regDataWidth=32,
             addr=20,
             register_list=[
                 Register(name='version',
