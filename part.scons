@@ -6,6 +6,7 @@ env.DIDepends(xml, 'Xilinx/Spartan/Spartan.xml')
 env.DIDepends(xml, 'Numonyx/M25P/M25P.xml')
 env.Xml(xml)
 
-env.Py('BrooksEE/UXN1330', Glob('py/UXN1330/*'))
+env.Py('BrooksEE/UXN1330', Glob('py/UXN1330/*.py'))
+env.Py('BrooksEE/UXN1330/tests', Glob('py/UXN1330/tests/*.py'))
 
 

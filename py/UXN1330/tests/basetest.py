@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+import os
+
 from nitro_parts.BrooksEE.UXN1330 import get_dev
 
 class DevTestCase(TestCase):
@@ -16,7 +18,8 @@ class DevTestCase(TestCase):
             Opens a device and attaches to class for usage as 
             `self.dev`
         """
-        cls.dev=get_dev() 
+        pid=os.environ.has_key('PID') and int(os.environ['PID'],16) or 0x1330
+        cls.dev=get_dev(PID=pid) 
 
     @classmethod
     def tearDownClass(cls):
