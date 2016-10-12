@@ -15,8 +15,8 @@ class TestSpeed(DevTestCase):
         """
             f is read/write, 
         """
-        fx3 = self.dev.get_pid() == 0x1330
-        usb3 = fx3 and self.dev.get('FX3','USB3')
+        usb3 = self.dev.get('FX3','USB3')
+	  
 
         MB=300
 
@@ -52,8 +52,7 @@ class TestSpeed(DevTestCase):
             This test fails if a USB3 device is attached but is not recognized
             as a USB3 device on the bus.
         """
-        if self.dev.get_pid() == 0x1330 and \
-           not self.dev.get('FX3','USB3'):
+        if not self.dev.get('FX3','USB3'):
             self.fail ( "USB3 device but recognized as USB2 on bus." )
 
 
