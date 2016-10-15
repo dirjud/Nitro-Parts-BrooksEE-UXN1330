@@ -93,7 +93,9 @@ module UXN1330_tb
       .fx3_fd                              (fx3_fd),
       .fx3_dma_rdy_b                       (fx3_dma_rdy_b),
       .SCL                                 (scl),
-      .SDA                                 (sda)
+      .SDA                                 (sda),
+      .fx3_clkout                          (fx3_clkout),
+      .fx3_slcs_b                          (1'b0)
       );
    
    UXN1330 UXN1330

@@ -360,7 +360,8 @@ module UXN1330
       .di_read_rdy	     (   di_read_rdy        ),	 
       .di_write_rdy	     (   di_write_rdy       ),	 
       .di_reg_datao	     (   di_reg_datao       ),	 
-      .di_transfer_status    (   di_transfer_status )
+      .di_transfer_status    (   di_transfer_status ),
+      .active_host_num()
    );
 `endif
 
@@ -727,7 +728,7 @@ module UXN1330
 	.c3_rst0                             (), //status_rst_wire),
 	.c3_sys_clk                          (ifclk),
 	.c3_sys_rst_i                        (resetb && !mcb_reset),
-
+	.c3_clk0(),
 	
         .c3_p0_cmd_clk                          (ifclk),
         .c3_p0_cmd_en                           (p0_cmd_en),
@@ -916,7 +917,8 @@ module UXN1330
       
       .pX_rd_en                         (p0_rd_en),
       .pX_rd_data                       (p0_rd_data[31:0]),
-      .pX_rd_empty                      (p0_rd_empty)
+      .pX_rd_empty                      (p0_rd_empty),
+      .pX_busy()
       );
    
    

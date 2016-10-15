@@ -144,7 +144,7 @@ static PyObject *get_dev(PyObject *self, PyObject* args ) {
     PyErr_SetString(PyExc_Exception, "You must call init() prior to this method");
     return NULL;
   }    
-  return nitro_from_datatype ( *(tb->v->fx3->fx3_dev) );
+  return nitro_from_datatype ( *(tb->UXN1330_tb->fx3->fx3_dev) );
 }
 
 static PyObject *adv(PyObject *self, PyObject *args) {
