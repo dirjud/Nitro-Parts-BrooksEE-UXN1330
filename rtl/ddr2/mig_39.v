@@ -1154,7 +1154,8 @@ module port_ctrl
    assign pX_rd_data = rfifo[rfifo_raddr];
    assign pX_rd_full = (rfifo_waddr+1 == rfifo_raddr);
    assign pX_rd_empty = (rfifo_waddr  == rfifo_raddr);
-   assign pX_rd_count= 0;
+   wire [6:0] count = rfifo_waddr - rfifo_raddr;
+   assign pX_rd_count = count > 64 ? count - 64 : count;
    assign pX_rd_overflow = 0;
    assign pX_rd_error = 0;
 endmodule
