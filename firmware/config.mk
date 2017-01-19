@@ -1,6 +1,6 @@
 # Build Notes 
 # Build deps: 
-#  fx3 version b94d9 
+#  fx3 version 8bba1 
 #  cyfx3sdk version 1.3.3
 #  NOTE - cyfxtx in cyfx3sdk must be modified to use last 32k boot os mem for buffers.
 
@@ -27,12 +27,13 @@ SOURCE += $(FX3DIR)fx3_term.c
 
 # add any custom debugging or cflags
 #BUILD_CCFLAGS += -DFIRMWARE_DI
-BUILD_CCFLAGS += -DENABLE_LOGGING
-#CCFLAGS += -DDEBUG_RDWR
-#CCFLAGS += -DDEBUG_SLFIFO_HANDLER
-#CCFLAGS += -DDEBUG_SPARTAN
-#CCFLAGS += -DDEBUG_CPU_HANDLER
-BUILD_CCFLAGS += -DDEBUG_MAIN
+#BUILD_CCFLAGS += -DENABLE_LOGGING
+#BUILD_CCFLAGS += -DDEBUG_RDWR
+#BUILD_CCFLAGS += -DDEBUG_SLFIFO_HANDLER
+#BUILD_CCFLAGS += -DDEBUG_SPARTAN
+#BUILD_CCFLAGS += -DDEBUG_CPU_HANDLER
+#BUILD_CCFLAGS += -DDEBUG_MAIN
+#BUILD_CCFLAGS += -DDEBUG_M25P
 
 # any custom includes
 INCLUDES += -I../../../Numonyx/M25P/fx3 -I../../../Microchip/M24XX/fx3 -I../../../Xilinx/Spartan/fx3

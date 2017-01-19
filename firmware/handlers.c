@@ -1,5 +1,6 @@
 #include <cyu3system.h>
 #include "handlers.h"
+#include <fx3_term.h>
 #include <m24xx.h>
 #include <m25p.h>
 #include "fx3_terminals.h"
@@ -17,6 +18,7 @@ app_init_t app_init[] = {
 
 io_handler_t io_handlers[] = {
   DECLARE_DUMMY_HANDLER(TERM_DUMMY_FX3),
+  DECLARE_FX3_HANDLER(TERM_FX3),
   DECLARE_UXN1330_HANDLER(TERM_UXN1330),
   DECLARE_M24XX_HANDLER(TERM_FX3_PROM, &m24_config),
   DECLARE_M25P_DATA_HANDLER(TERM_FPGA_PROM_DATA),

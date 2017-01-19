@@ -10,6 +10,8 @@
 
 #include "fx3_terminals.h"
 
+#include "low_power.h"
+
 
 extern rdwr_cmd_t gRdwrCmd;
 
@@ -17,9 +19,45 @@ extern rdwr_cmd_t gRdwrCmd;
 #define VERSION_MINOR 0
 #define VERSION (VERSION_MAJOR<<16)|VERSION_MINOR
 
+#define CHECK(pin) \
+   if (ret) {\
+     log_error ( "Gpio config " pin " failed %d\n", ret );\
+     return;\
+   }
+
 void uxn1330_boot(uint16_t term) {
+
     // set gpios
-    CyU3PGpioSetValue( UXN1330_VCON_EN, CyTrue );
+    uint16_t ret;
+
+    log_info ( "uxn1330 boot\n");
+    
+    CyU3PGpioSimpleConfig_t gpioConfig;
+    
+    ret = CyU3PDeviceGpioOverride( UXN1330_VCON_EN, CyTrue );
+    CHECK("vcon en");
+    ret = CyU3PDeviceGpioOverride( UXN1330_LP_B, CyTrue );
+    CHECK("LP_B");    
+    ret = CyU3PDeviceGpioOverride( UXN1330_V18_EN, CyTrue );
+    CHECK("v18_en");
+
+    gpioConfig.outValue    = CyFalse;
+    gpioConfig.driveLowEn  = CyTrue ;
+    gpioConfig.driveHighEn = CyTrue;
+    gpioConfig.inputEn     = CyFalse;
+    gpioConfig.intrMode    = CY_U3P_GPIO_NO_INTR;
+
+    ret = CyU3PGpioSetSimpleConfig ( UXN1330_VCON_EN, &gpioConfig );
+    CHECK("vcon en set");
+
+    gpioConfig.outValue = CyTrue; 
+    ret = CyU3PGpioSetSimpleConfig ( UXN1330_V18_EN, &gpioConfig );
+    CHECK("V18_en set");
+
+    gpioConfig.outValue = LP_B_INITIAL;
+    ret = CyU3PGpioSetSimpleConfig ( UXN1330_LP_B, &gpioConfig );
+    CHECK("lp_b set");
+
 }
 
 uint16_t rdwr_vcon_pot(uint8_t *val, CyBool_t write) {
@@ -51,6 +89,8 @@ uint16_t rdwr_vcon_pot(uint8_t *val, CyBool_t write) {
           return status;
         }
     }
+
+    return 0;
 }
 
 
