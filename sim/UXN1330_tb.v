@@ -143,8 +143,10 @@ module UXN1330_tb
       .l1n                              (l1n),
       .l2n                              (l2n),
       .l2p                              (l2p),
+`ifndef LX25
       .l32n                             (l32n),
       .l32p                             (l32p),
+`endif
       .l33n                             (l33n),
       .l33p                             (l33p),
       .l34n                             (l34n),
@@ -189,13 +191,17 @@ module UXN1330_tb
       .l66p                             (l66p),
       .l6n                              (l6n),
       .l6p                              (l6p),
+`ifndef LX25
       .l7n                              (l7n),
       .l7p                              (l7p),
+`endif
       .l8n                              (l8n),
       .l8p                              (l8p),
+`ifndef LX25
       .l9n                              (l9n),
       .l9p                              (l9p),
-
+`endif
+      
       .n1n                              (n1n),
       .n1p                              (n1p),
       .n29n                             (n29n),
@@ -297,8 +303,10 @@ module UXN1330_tb
       .l1n                              (l1n),
       .l2n                              (l2n),
       .l2p                              (l2p),
+`ifndef LX25
       .l32n                             (l32n),
       .l32p                             (l32p),
+`endif
       .l33n                             (l33n),
       .l33p                             (l33p),
       .l34n                             (l34n),
@@ -343,13 +351,16 @@ module UXN1330_tb
       .l66p                             (l66p),
       .l6n                              (l6n),
       .l6p                              (l6p),
+`ifndef LX25
       .l7n                              (l7n),
       .l7p                              (l7p),
+`endif
       .l8n                              (l8n),
       .l8p                              (l8p),
+`ifndef LX25
       .l9n                              (l9n),
       .l9p                              (l9p),
-
+`endif
       .n1n                              (n1n),
       .n1p                              (n1p),
       .n29n                             (n29n),

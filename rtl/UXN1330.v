@@ -41,7 +41,7 @@ module UXN1330
    output 	 fx3_int_b,
    inout [31:0]  fx3_fd,
 
-   input         button,
+   input 	 button,
    output 	 led_b,
    inout [15:0]  header,
    
@@ -74,8 +74,10 @@ module UXN1330
    inout 	 l1n,
    inout 	 l2n,
    inout 	 l2p,
+`ifndef LX25
    inout 	 l32n,
    inout 	 l32p,
+`endif
    inout 	 l33n,
    inout 	 l33p,
    inout 	 l34n,
@@ -120,12 +122,16 @@ module UXN1330
    inout 	 l66p,
    inout 	 l6n,
    inout 	 l6p,
+`ifndef LX25
    inout 	 l7n,
    inout 	 l7p,
+`endif
    inout 	 l8n,
    inout 	 l8p,
+`ifndef LX25
    inout 	 l9n,
    inout 	 l9p,
+`endif
    
    inout 	 n1n,
    inout 	 n1p,
@@ -178,7 +184,7 @@ module UXN1330
    inout 	 n52n,
    inout 	 n52p,
 `ifndef VREF_BANKN
-   inout  	 n53n, // synthesis attribute LOC of n53n is N14 */
+   inout 	 n53n, // synthesis attribute LOC of n53n is N14 */
 `endif
    inout 	 n53p,
    inout 	 n61n,
@@ -398,8 +404,10 @@ module UXN1330
       .l1n                              (l1n),
       .l2n                              (l2n),
       .l2p                              (l2p),
+`ifndef LX25
       .l32n                             (l32n),
       .l32p                             (l32p),
+`endif
       .l33n                             (l33n),
       .l33p                             (l33p),
       .l34n                             (l34n),
@@ -444,12 +452,16 @@ module UXN1330
       .l66p                             (l66p),
       .l6n                              (l6n),
       .l6p                              (l6p),
+`ifndef LX25
       .l7n                              (l7n),
       .l7p                              (l7p),
+`endif
       .l8n                              (l8n),
       .l8p                              (l8p),
+`ifndef LX25
       .l9n                              (l9n),
       .l9p                              (l9p),
+`endif
 
       .n1n                              (n1n),
       .n1p                              (n1p),

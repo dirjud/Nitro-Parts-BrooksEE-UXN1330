@@ -51,6 +51,19 @@ UCF_DRAM = \#
 
 endif
 
+
+ifeq (,$(findstring LX25, $(DEFS)))
+
+LX25_COMMENT = 
+
+else
+
+LX25_COMMENT = \#
+
+endif
+
+
+
 # override this if you want the fpga to drive stronger than the lowest setting
 # settings are 2, 4, 6, 8, 12, 16, 24 mA (ug381)
 FPGA_TO_FX3_DRIVE ?= 2
@@ -70,5 +83,6 @@ SPI_PROM_SIZE =  524288
 	sed -e "s/IFCLKFREQ/`python ../$(UXN1330_DIR)/xilinx/ifclock.py $(DEFS)`/" $< > $@ 
 	sed -i -e "s/<DISABLE_SDRAM>/$(UCF_DRAM)/" $@
 	sed -i -e "s/<FPGA_TO_FX3_DRIVE>/$(FPGA_TO_FX3_DRIVE)/" $@
+	sed -i -e "s/<LX25>/$(LX25_COMMENT)/" $@
 
 
