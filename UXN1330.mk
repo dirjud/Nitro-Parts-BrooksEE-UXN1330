@@ -54,11 +54,11 @@ endif
 
 ifeq (,$(findstring LX25, $(DEFS)))
 
-LX25_COMMENT = 
+LX25_COMMENT = \#
 
 else
 
-LX25_COMMENT = \#
+LX25_COMMENT = 
 
 endif
 
