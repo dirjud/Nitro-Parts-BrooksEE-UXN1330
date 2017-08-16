@@ -8,3 +8,4 @@ xilinx/*
 !xilinx/ifclock.py
 UXN1330.xml
 *pyc
+*.img
