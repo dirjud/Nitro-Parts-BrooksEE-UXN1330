@@ -9,7 +9,7 @@ VID = 0x1fe1
 PID = 0x1330
 USB2_POWER = 0xFA # 500 mA
 USB3_POWER = 0x58 # 704 mA
-FIRMWARE_VERSION = 0x114
+FIRMWARE_VERSION = 0x115
 
 # the required assembly files
 SOURCE += $(FX3DIR)dscr.c 
@@ -24,6 +24,8 @@ SOURCE += ../../../Xilinx/Spartan/fx3/spartan.c
 SOURCE += ../../../Xilinx/Spartan/fx3/slfifo_handler.c
 SOURCE += $(FX3DIR)main.c 
 SOURCE += $(FX3DIR)fx3_term.c
+SOURCE += $(FX3DIR)log.c
+SOURCE += $(FX3DIR)serial.c
 
 # add any custom debugging or cflags
 #BUILD_CCFLAGS += -DFIRMWARE_DI
