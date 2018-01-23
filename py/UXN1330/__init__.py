@@ -88,7 +88,10 @@ class UXN1330(nitro.DevBase):
     def set_vcon(self,volts=3.3, enable=True):
         return set_vcon(self,volts, enable)
 
-
+    def get_fpga_version(self):
+        v = self.get_subregs("FPGA","version")
+        return "%02x.%02x.%02x.%02x" % (v.major, v.minor, v.feature, v.build)
+ 
     def init_system(self):
         # 130606 board can stream in lp mode if on USB2 bus.
         # haven't yet got lp_b to work on USB3
